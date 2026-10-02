@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Анна Буквовна: игры</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root {
+  --bg: #fffaf0;
+  --fg: #2b2b3a;
+  --muted: #6b6b7b;
+  --surface: #ffffff;
+  --line: #e6dfd0;
+  --good: #2e9e5b;
+  --good-bg: #d9f3e3;
+  --soft: #e08a1e;
+  --soft-bg: #ffecd0;
+  --accent: #5b6cff;
+  --accent-fg: #ffffff;
+  --card-s: 85%; --card-l: 88%; --card-fg: #2b2b3a;
+}
+:root[data-theme="dark"] {
+  --bg: #1b1d2a;
+  --fg: #f1f1f6;
+  --muted: #a3a6b8;
+  --surface: #272a3b;
+  --line: #3a3e54;
+  --good: #5fd18b;
+  --good-bg: #1f4a35;
+  --soft: #ffb454;
+  --soft-bg: #4d3a1f;
+  --accent: #8a96ff;
+  --accent-fg: #14162a;
+  --card-s: 40%; --card-l: 26%; --card-fg: #f6f6fb;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 20px/1.35 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow-x: hidden; min-height: 100vh;
+}
+#app { max-width: 520px; margin: 0 auto; padding: 12px 16px 28px; }
+button {
+  font: inherit; color: inherit; border: 0; cursor: pointer;
+  min-height: 56px; border-radius: 18px; padding: 10px 18px;
+  touch-action: manipulation;
+}
+button:disabled { opacity: .45; cursor: default; }
+.hidden { display: none !important; }
+
+/* Анна Буквовна */
+.anna { display: flex; align-items: center; gap: 12px; margin: 6px 0 16px; }
+.anna .face { font-size: 48px; line-height: 1; flex: none; }
+.bubble { background: var(--surface); border: 2px solid var(--line); border-radius: 20px 20px 20px 6px; padding: 10px 14px; }
+
+/* Меню */
+.menu { display: grid; gap: 14px; }
+.card {
+  display: flex; align-items: center; gap: 14px; text-align: left; width: 100%;
+  min-height: 92px; padding: 14px 16px; border-radius: 24px;
+  background: hsl(var(--h) var(--card-s) var(--card-l)); color: var(--card-fg);
+  box-shadow: 0 3px 0 hsl(var(--h) 40% 50% / .35);
+}
+.card:active { transform: translateY(2px); box-shadow: none; }
+.card .ico { font-size: 40px; flex: none; }
+.card b { display: block; font-size: 22px; }
+.card span.s { font-size: 18px; opacity: .85; }
+
+/* Шапка игры */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.back { background: var(--surface); border: 2px solid var(--line); min-height: 48px; padding: 6px 14px; }
+.stat { font-weight: 700; white-space: nowrap; }
+.dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 12px; }
+.dots i { width: 14px; height: 14px; border-radius: 50%; background: var(--line); display: block; }
+.dots i.on { background: var(--accent); }
+.dots i.ok { background: var(--good); }
+.dots i.no { background: var(--soft); }
+
+.task { text-align: center; margin: 4px 0 8px; }
+.wordrow { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 8px 0 14px; }
+.word { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.t {
+  min-width: 34px; height: 64px; padding: 0 4px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 38px; font-weight: 700; background: var(--surface); border: 2px solid var(--line);
+}
+.t.v { background: var(--accent); color: var(--accent-fg); border-color: transparent; min-height: 64px; padding: 0 6px; }
+.t.static { min-width: 30px; }
+.t.good { background: var(--good-bg); border-color: var(--good); color: var(--fg); }
+.t.soft { background: var(--soft-bg); border-color: var(--soft); color: var(--fg); }
+.t.hl { background: var(--good-bg); border-color: var(--good); }
+.t.blank { border-style: dashed; border-color: var(--accent); color: var(--accent); }
+.t.dim { opacity: .55; }
+.mark { position: relative; }
+.mark::after { content: "\0301"; }
+
+.sayb { width: 56px; min-height: 56px; padding: 0; font-size: 26px; background: var(--surface); border: 2px solid var(--line); flex: none; }
+
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0; }
+.choices.three { grid-template-columns: 1fr 1fr 1fr; }
+.choices.one { grid-template-columns: 1fr; }
+.big {
+  min-height: 72px; font-size: 26px; font-weight: 700; background: var(--accent); color: var(--accent-fg);
+  box-shadow: 0 3px 0 rgba(0,0,0,.18);
+}
+.big.alt { background: hsl(var(--h2, 20) 80% 60%); color: #2b2b3a; }
+.big.good { background: var(--good); color: #fff; }
+.big.soft { background: var(--soft-bg); color: var(--fg); border: 2px solid var(--soft); }
+.big.twoline { font-size: 21px; line-height: 1.2; }
+
+.clap { display: flex; flex-direction: column; align-items: center; gap: 12px; margin: 6px 0; }
+.clapbtn { width: 170px; height: 170px; border-radius: 50%; font-size: 80px; padding: 0; background: hsl(40 95% 62%); box-shadow: 0 6px 0 hsl(40 70% 42%); }
+.clapbtn:active { transform: translateY(4px) scale(.97); box-shadow: 0 2px 0 hsl(40 70% 42%); }
+.count { font-size: 56px; font-weight: 800; min-height: 64px; }
+.row2 { display: flex; gap: 12px; width: 100%; }
+.row2 > button { flex: 1; }
+.ghost { background: var(--surface); border: 2px solid var(--line); }
+
+.fb { min-height: 28px; text-align: center; font-size: 21px; margin: 8px 0; padding: 10px 12px; border-radius: 16px; }
+.fb:empty { display: none; }
+.fb.ok { background: var(--good-bg); }
+.fb.soft { background: var(--soft-bg); }
+.fb .pieces { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 6px; font-size: 32px; font-weight: 700; }
+.fb .pc { background: var(--surface); border: 2px solid var(--good); border-radius: 12px; padding: 0 10px; }
+.fb .big-word { font-size: 36px; font-weight: 700; margin-top: 4px; }
+.fb hl, .fb .lt { color: var(--good); text-decoration: underline; text-decoration-thickness: 3px; }
+
+.next { background: var(--good); color: #fff; width: 100%; font-size: 24px; font-weight: 700; margin-top: 6px; }
+
+/* Финал */
+.final { text-align: center; }
+.final h1 { font-size: 34px; margin: 8px 0; }
+.bigstars { font-size: 30px; line-height: 1.25; margin: 4px 0; overflow-wrap: anywhere; }
+.final p { margin: 6px 0; }
+.again { margin: 8px 0; text-align: left; }
+.final .acts { display: grid; gap: 12px; margin-top: 16px; }
+.acts .primary { background: var(--accent); color: var(--accent-fg); font-weight: 700; }
+.acts .finish { background: var(--good); color: #fff; font-weight: 700; }
+.shake { animation: shake .3s; }
+@keyframes shake { 25% { transform: translateX(-6px) } 75% { transform: translateX(6px) } }
+.pop { animation: pop .25s; }
+@keyframes pop { 50% { transform: scale(1.15) } }
+@media (max-width: 380px) {
+  .t { min-width: 28px; padding: 0 2px; font-size: 36px; }
+  .word { gap: 4px; }
+  .wordrow { gap: 6px; }
+  .sayb { width: 52px; }
+  .card b { font-size: 21px; }
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+"use strict";
+(function () {
+  var TG = (window.Telegram && window.Telegram.WebApp) || null;
+  var IN_TG = !!(TG && TG.platform && TG.platform !== "unknown");
+  var ROUND = 8;
+  var DATA = null;
+  var S = null;           // состояние игры
+  var app = document.getElementById("app");
+
+  /* ---------- Telegram и тема ---------- */
+  function applyTheme() {
+    var root = document.documentElement;
+    var scheme = "light";
+    if (TG && IN_TG && TG.colorScheme) scheme = TG.colorScheme;
+    else if (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches) scheme = "dark";
+    root.setAttribute("data-theme", scheme);
+    var p = (TG && TG.themeParams) || {};
+    ["bg_color:--bg", "text_color:--fg", "hint_color:--muted"].forEach(function (s) {
+      var kv = s.split(":");
+      if (p[kv[0]]) root.style.setProperty(kv[1], p[kv[0]]);
+    });
+    if (p.secondary_bg_color) root.style.setProperty("--surface", p.secondary_bg_color);
+  }
+  if (TG) {
+    try { TG.ready(); TG.expand(); } catch (e) {}
+    try { TG.onEvent("themeChanged", applyTheme); } catch (e) {}
+  }
+  applyTheme();
+  if (window.matchMedia) {
+    try { matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme); } catch (e) {}
+  }
+
+  /* ---------- помощники ---------- */
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function shuffle(a) {
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  function pick(arr, n) { return shuffle(arr.slice()).slice(0, n); }
+  function rnd(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  function slogWord(n) {
+    var m = n % 10, h = n % 100;
+    if (m === 1 && h !== 11) return "слог";
+    if (m >= 2 && m <= 4 && (h < 12 || h > 14)) return "слога";
+    return "слогов";
+  }
+  var VOW = "аоуыэяёюие";
+  function isVowel(c) { return VOW.indexOf(c.toLowerCase()) >= 0; }
+  function clear(n) { while (n.firstChild) n.removeChild(n.firstChild); }
+
+  var PRAISE = ["Молодец!", "Умница!", "Отлично!", "Здорово!", "Так держать!", "Супер!"];
+  var SOFT = "Почти! Попробуй ещё";
+
+  var GAMES = {
+    stress: { title: "Поймай ударение", ico: "⚡", sub: "Найди ударную гласную", skill: "stress", h: 262 },
+    clap:   { title: "Хлопушка", ico: "👏", sub: "Считаем слоги", skill: "syllables", h: 42 },
+    spy:    { title: "Шпион-звук", ico: "🕵️", sub: "Гласный или согласный?", skill: "vowels", h: 170 },
+    dict:   { title: "Вставь букву", ico: "✏️", sub: "Словарные слова", skill: "dictionary", h: 330 }
+  };
+  var ORDER = ["stress", "clap", "spy", "dict"];
+
+  /* ---------- озвучка ---------- */
+  var ruVoice = null;
+  var canSpeak = false;
+  function findVoice() {
+    if (!("speechSynthesis" in window)) return;
+    var vs = [];
+    try { vs = speechSynthesis.getVoices() || []; } catch (e) {}
+    for (var i = 0; i < vs.length; i++) {
+      if ((vs[i].lang || "").toLowerCase().replace("_", "-").indexOf("ru") === 0) { ruVoice = vs[i]; break; }
+    }
+    canSpeak = !!ruVoice;
+    var bs = document.querySelectorAll(".sayb");
+    for (var k = 0; k < bs.length; k++) bs[k].classList.toggle("hidden", !canSpeak);
+  }
+  if ("speechSynthesis" in window) {
+    findVoice();
+    try { speechSynthesis.addEventListener("voiceschanged", findVoice); } catch (e) {}
+    setTimeout(findVoice, 800);
+  }
+  function say(text) {
+    if (!canSpeak) return;
+    try {
+      speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = "ru-RU"; u.voice = ruVoice; u.rate = 0.8;
+      speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+  function sayBtn(text) {
+    var b = el("button", "sayb" + (canSpeak ? "" : " hidden"), "🔊");
+    b.setAttribute("aria-label", "Послушать слово");
+    b.onclick = function () { say(text); };
+    return b;
+  }
+
+  /* ---------- меню ---------- */
+  function annaRow(text) {
+    var r = el("div", "anna");
+    r.appendChild(el("div", "face", "👩‍🏫"));
+    r.appendChild(el("div", "bubble", text));
+    return r;
+  }
+
+  function showMenu() {
+    S = null;
+    clear(app);
+    var tgName = "";
+    try { tgName = window.Telegram.WebApp.initDataUnsafe.user.first_name || ""; } catch (e) {}
+    app.appendChild(annaRow("Привет" + (tgName ? ", " + tgName : "") + "! Я Анна Буквовна. Во что сыграем?"));
+    var m = el("div", "menu");
+    ORDER.forEach(function (k) {
+      var g = GAMES[k];
+      var b = el("button", "card");
+      b.style.setProperty("--h", g.h);
+      b.appendChild(el("div", "ico", g.ico));
+      var d = el("div");
+      d.appendChild(el("b", null, g.title));
+      d.appendChild(el("span", "s", g.sub));
+      b.appendChild(d);
+      b.onclick = function () { startGame(k); };
+      m.appendChild(b);
+    });
+    app.appendChild(m);
+  }
+
+  /* ---------- раунд ---------- */
+  function buildItems(game) {
+    if (game === "stress") return pick(DATA.stress, ROUND).map(function (x) { return { word: x.word, idx: x.idx }; });
+    if (game === "clap") return pick(DATA.syllables, ROUND);
+    if (game === "spy") return pick(DATA.sound, ROUND);
+    return pick(DATA.dictionary, ROUND);
+  }
+
+  function startGame(game) {
+    S = { game: game, items: buildItems(game), i: 0, score: 0, stars: 0, streak: 0, best: 0, results: [], locked: false };
+    renderQuestion();
+  }
+
+  function frame() {
+    clear(app);
+    var top = el("div", "top");
+    var back = el("button", "back", "← Меню");
+    back.onclick = function () { try { speechSynthesis.cancel(); } catch (e) {} showMenu(); };
+    top.appendChild(back);
+    var st = el("div", "stat");
+    st.id = "stat";
+    top.appendChild(st);
+    app.appendChild(top);
+    var dots = el("div", "dots");
+    for (var i = 0; i < S.items.length; i++) {
+      var d = el("i");
+      var r = S.results[i];
+      if (r) d.className = r.ok ? "ok" : "no";
+      else if (i === S.i) d.className = "on";
+      dots.appendChild(d);
+    }
+    app.appendChild(dots);
+    updateStat();
+  }
+  function updateStat() {
+    var st = document.getElementById("stat");
+    if (!st) return;
+    st.textContent = "⭐ " + S.stars + (S.streak >= 2 ? "  🔥 " + S.streak : "");
+  }
+
+  function renderQuestion() {
+    S.cur = { tries: 0, missed: false, done: false };
+    S.locked = false;
+    frame();
+    var item = S.items[S.i];
+    var box = el("div");
+    app.appendChild(box);
+    var fb = el("div", "fb");
+    fb.id = "fb";
+    var next = el("button", "next hidden", S.i + 1 >= S.items.length ? "Готово! 🎉" : "Дальше →");
+    next.id = "next";
+    next.onclick = nextQuestion;
+    S.fb = fb; S.next = next; S.box = box;
+    if (S.game === "stress") qStress(box, item);
+    else if (S.game === "clap") qClap(box, item);
+    else if (S.game === "spy") qSpy(box, item);
+    else qDict(box, item);
+    app.appendChild(fb);
+    app.appendChild(next);
+  }
+
+  function feedback(cls, text, extra) {
+    clear(S.fb);
+    S.fb.className = "fb " + cls;
+    S.fb.appendChild(document.createTextNode(text));
+    if (extra) S.fb.appendChild(extra);
+  }
+
+  // Итог по слову: points 2 (с первого раза), 1 (со второго), 0 (показали ответ)
+  function finishWord(word, points, clean) {
+    S.cur.done = true;
+    S.stars += points;
+    S.score += points;
+    if (clean) { S.streak++; if (S.streak > S.best) S.best = S.streak; }
+    else S.streak = 0;
+    S.results.push({ word: word, ok: clean, skill: GAMES[S.game].skill });
+    updateStat();
+    var dots = document.querySelectorAll(".dots i");
+    if (dots[S.i]) dots[S.i].className = clean ? "ok" : "no";
+    S.next.classList.remove("hidden");
+    S.locked = true;
+    try { S.next.scrollIntoView({ block: "nearest", behavior: "smooth" }); } catch (e) {}
+  }
+
+  function nextQuestion() {
+    try { speechSynthesis.cancel(); } catch (e) {}
+    S.i++;
+    if (S.i >= S.items.length) renderFinal();
+    else renderQuestion();
+  }
+
+  /* ---------- игра 1: Поймай ударение ---------- */
+  function qStress(box, it) {
+    box.appendChild(el("div", "task", "Нажми на ударную гласную"));
+    var row = el("div", "wordrow");
+    var w = el("div", "word");
+    var tiles = [];
+    for (var i = 0; i < it.word.length; i++) {
+      (function (i) {
+        var ch = it.word.charAt(i);
+        var t = el("button", "t " + (isVowel(ch) ? "v" : "static"), ch);
+        if (!isVowel(ch)) {
+          t.style.minHeight = "64px";
+          t.onclick = function () {
+            if (S.locked) return;
+            feedback("soft", "Ищем гласную. Они выделены цветом 🙂");
+          };
+        } else {
+          t.onclick = function () { onStressTap(it, i, tiles); };
+        }
+        tiles.push(t);
+        w.appendChild(t);
+      })(i);
+    }
+    row.appendChild(w);
+    row.appendChild(sayBtn(it.word));
+    box.appendChild(row);
+    box.appendChild(el("div", "task", "Позови слово издалека: ко-ро-о-ова!"));
+    box.lastChild.style.cssText = "font-size:18px;color:var(--muted)";
+  }
+  function stressWordHtml(it) {
+    var s = el("div", "big-word");
+    s.textContent = it.word.slice(0, it.idx) + it.word.charAt(it.idx) + "́" + it.word.slice(it.idx + 1);
+    return s;
+  }
+  function onStressTap(it, i, tiles) {
+    if (S.locked) return;
+    S.cur.tries++;
+    var right = i === it.idx;
+    if (right) {
+      tiles[i].className = "t good";
+      tiles[i].textContent = it.word.charAt(i) + "́";
+      lockTiles(tiles);
+      feedback("ok", rnd(PRAISE) + " Ударение на «" + it.word.charAt(i) + "»", stressWordHtml(it));
+      finishWord(it.word, S.cur.tries === 1 ? 2 : 1, S.cur.tries === 1);
+    } else if (S.cur.tries >= 2) {
+      tiles[i].className = "t soft";
+      tiles[it.idx].className = "t good";
+      tiles[it.idx].textContent = it.word.charAt(it.idx) + "́";
+      lockTiles(tiles);
+      feedback("soft", "Смотри: ударение на «" + it.word.charAt(it.idx) + "». Запомним!", stressWordHtml(it));
+      finishWord(it.word, 0, false);
+    } else {
+      S.cur.missed = true;
+      tiles[i].className = "t soft shake";
+      tiles[i].disabled = true;
+      feedback("soft", SOFT);
+    }
+  }
+  function lockTiles(tiles) { tiles.forEach(function (t) { t.disabled = true; t.style.opacity = "1"; }); }
+
+  /* ---------- игра 2: Хлопушка ---------- */
+  function qClap(box, it) {
+    box.appendChild(el("div", "task", "Сколько слогов? Хлопай и нажми «Готово»"));
+    var row = el("div", "wordrow");
+    var w = el("div", "word");
+    for (var i = 0; i < it.word.length; i++) w.appendChild(el("div", "t static", it.word.charAt(i)));
+    row.appendChild(w);
+    row.appendChild(sayBtn(it.word));
+    box.appendChild(row);
+    var c = el("div", "clap");
+    var count = el("div", "count", "0");
+    var n = 0;
+    var btn = el("button", "clapbtn", "👏");
+    btn.setAttribute("aria-label", "Хлопок");
+    btn.onclick = function () {
+      if (S.locked) return;
+      n++; count.textContent = n; count.classList.remove("pop"); void count.offsetWidth; count.classList.add("pop");
+    };
+    var r2 = el("div", "row2");
+    var reset = el("button", "ghost", "↺ Сначала");
+    reset.onclick = function () { if (!S.locked) { n = 0; count.textContent = "0"; } };
+    var done = el("button", "big good", "Готово");
+    done.style.minHeight = "56px";
+    done.onclick = function () {
+      if (S.locked) return;
+      if (n === 0) { feedback("soft", "Похлопай по слогам 👏"); return; }
+      S.cur.tries++;
+      var right = n === it.parts.length;
+      var pieces = el("div", "pieces");
+      it.parts.forEach(function (p) { pieces.appendChild(el("span", "pc", p)); });
+      var line = it.parts.join("-") + " — " + it.parts.length + " " + slogWord(it.parts.length);
+      if (right) {
+        feedback("ok", rnd(PRAISE) + " " + line, pieces);
+        finishWord(it.word, S.cur.tries === 1 ? 2 : 1, S.cur.tries === 1);
+        btn.disabled = done.disabled = reset.disabled = true;
+      } else if (S.cur.tries >= 2) {
+        feedback("soft", "Смотри, как делится слово: " + line, pieces);
+        finishWord(it.word, 0, false);
+        btn.disabled = done.disabled = reset.disabled = true;
+      } else {
+        S.cur.missed = true;
+        n = 0; count.textContent = "0";
+        feedback("soft", SOFT + ". В каждом слоге одна гласная.");
+      }
+    };
+    r2.appendChild(reset); r2.appendChild(done);
+    c.appendChild(btn); c.appendChild(count); c.appendChild(r2);
+    box.appendChild(c);
+  }
+
+  /* ---------- игра 3: Шпион-звук ---------- */
+  function trapText(word) {
+    var L = word.charAt(0).toUpperCase();
+    var snd = { "Я": "[й’а]", "Ю": "[й’у]", "Е": "[й’э]", "Ё": "[й’о]" }[L];
+    return "Буква " + L + " в начале прячет два звука: " + snd + ". Первый — согласный [й’].";
+  }
+  function qSpy(box, it) {
+    box.appendChild(el("div", "task", "С какого звука начинается " + (it.name ? "имя" : "слово") + "?"));
+    var row = el("div", "wordrow");
+    var w = el("div", "word");
+    for (var i = 0; i < it.word.length; i++) w.appendChild(el("div", "t static", it.word.charAt(i)));
+    row.appendChild(w);
+    row.appendChild(sayBtn(it.word));
+    box.appendChild(row);
+    var ch = el("div", "choices");
+    var bv = el("button", "big twoline", "🎵 Гласный звук");
+    var bc = el("button", "big alt twoline", "🤐 Согласный звук");
+    bc.style.setProperty("--h2", 20);
+    var btns = { v: bv, c: bc };
+    function answer(k) {
+      if (S.locked) return;
+      S.cur.tries++;
+      var right = k === it.kind;
+      var first = it.word.charAt(0);
+      var extra = it.trap ? el("div", null, trapText(it.word)) : null;
+      if (extra) extra.style.cssText = "font-size:20px;margin-top:6px";
+      var kindName = it.kind === "v" ? "гласный" : "согласный";
+      if (right) {
+        btns[k].classList.add("good");
+        feedback("ok", rnd(PRAISE) + " Первый звук — " + kindName + ".", extra);
+        finishWord(it.word, S.cur.tries === 1 ? 2 : 1, S.cur.tries === 1);
+        bv.disabled = bc.disabled = true; btns[k].style.opacity = 1;
+      } else if (S.cur.tries >= 2) {
+        btns[it.kind].classList.add("good");
+        var msg = it.trap ? "Смотри, тут хитрость." : "Смотри: первая буква «" + first.toUpperCase() + "», звук — " + kindName + ".";
+        feedback("soft", msg, extra);
+        finishWord(it.word, 0, false);
+        bv.disabled = bc.disabled = true; btns[it.kind].style.opacity = 1;
+      } else {
+        S.cur.missed = true;
+        btns[k].classList.add("soft", "shake");
+        btns[k].disabled = true;
+        feedback("soft", SOFT + ". Протяни первый звук: «" + first.toLowerCase() + "…»");
+      }
+    }
+    bv.onclick = function () { answer("v"); };
+    bc.onclick = function () { answer("c"); };
+    ch.appendChild(bv); ch.appendChild(bc);
+    box.appendChild(ch);
+  }
+
+  /* ---------- игра 4: Вставь букву ---------- */
+  function qDict(box, it) {
+    box.appendChild(el("div", "task", "Какой буквы не хватает?"));
+    var row = el("div", "wordrow");
+    var w = el("div", "word");
+    row.appendChild(w);
+    row.appendChild(sayBtn(it.word));
+    box.appendChild(row);
+    var chWrap = el("div");
+    box.appendChild(chWrap);
+    var gi = 0;                 // номер текущего пропуска
+    var solved = {};            // группа -> true
+    var anyReveal = false;
+
+    function paint(activeGroup, doneAll) {
+      clear(w);
+      var inGroup = {};
+      it.groups.forEach(function (g, n) { g.pos.forEach(function (p) { inGroup[p] = n; }); });
+      for (var i = 0; i < it.word.length; i++) {
+        var n = inGroup[i];
+        var t = el("div", "t static");
+        if (n === undefined) t.textContent = it.word.charAt(i);
+        else if (solved[n]) { t.textContent = it.word.charAt(i); t.classList.add("hl"); }
+        else if (n === activeGroup) { t.textContent = "_"; t.classList.add("blank"); }
+        else { t.textContent = "_"; t.classList.add("dim"); }
+        w.appendChild(t);
+      }
+    }
+    function showOptions() {
+      clear(chWrap);
+      var g = it.groups[gi];
+      var opts = shuffle(g.options.slice());
+      var ch = el("div", "choices " + (opts.length === 3 ? "three" : opts.length === 2 ? "" : "one"));
+      var tries = 0;
+      opts.forEach(function (o) {
+        var b = el("button", "big", o);
+        b.onclick = function () {
+          if (S.locked) return;
+          tries++;
+          S.cur.tries++;
+          if (o === g.answer) {
+            b.classList.add("good");
+            solved[gi] = true;
+            if (tries > 1) S.cur.missed = true;
+            gapDone(tries === 1);
+          } else if (tries >= 2) {
+            S.cur.missed = true; anyReveal = true;
+            solved[gi] = true;
+            b.classList.add("soft");
+            gapDone(false, true);
+          } else {
+            S.cur.missed = true;
+            b.classList.add("soft", "shake");
+            b.disabled = true;
+            feedback("soft", SOFT);
+          }
+        };
+        ch.appendChild(b);
+      });
+      chWrap.appendChild(ch);
+      paint(gi);
+    }
+    function gapDone(first, revealed) {
+      var lastGap = gi + 1 >= it.groups.length;
+      paint(-1);
+      if (!lastGap) {
+        S.locked = true;
+        feedback(revealed ? "soft" : "ok", revealed ? "Смотри: здесь «" + it.groups[gi].answer + "». Идём дальше." : rnd(PRAISE) + " Идём дальше.");
+        setTimeout(function () {
+          if (!S || S.items[S.i] !== it) return;
+          gi++; S.locked = false; showOptions();
+        }, 900);
+        return;
+      }
+      clear(chWrap);
+      var bigw = el("div", "big-word");
+      for (var i = 0; i < it.word.length; i++) {
+        var hard = it.groups.some(function (g) { return g.pos.indexOf(i) >= 0; });
+        var s = el("span", hard ? "lt" : null, it.word.charAt(i));
+        bigw.appendChild(s);
+      }
+      var clean = !S.cur.missed;
+      var pts = clean ? 2 : (anyReveal ? 0 : 1);
+      var letters = it.groups.map(function (g) { return "«" + g.answer + "»"; }).join(" и ");
+      if (anyReveal) feedback("soft", "Словарное слово. Запомним: пишем " + letters, bigw);
+      else feedback("ok", rnd(PRAISE) + " Запомни: пишем " + letters, bigw);
+      finishWord(it.word, pts, clean);
+    }
+    showOptions();
+  }
+
+  /* ---------- финал и отправка ---------- */
+  function buildPayload() {
+    var results = S.results.map(function (r) { return { word: r.word, ok: r.ok, skill: r.skill }; });
+    var p = { v: 1, game: S.game, score: S.score, streak: S.best, results: results };
+    function size() { return new Blob([JSON.stringify(p)]).size; }
+    while (size() > 3900 && p.results.length > 1) p.results.pop();
+    return p;
+  }
+
+  function renderFinal() {
+    clear(app);
+    var okN = S.results.filter(function (r) { return r.ok; }).length;
+    var wrap = el("div", "final");
+    wrap.appendChild(el("div", "anna-face", "🎉"));
+    wrap.lastChild.style.fontSize = "64px";
+    wrap.appendChild(el("h1", null, "Ты молодец!"));
+    var stars = "";
+    for (var i = 0; i < Math.min(S.stars, 16); i++) stars += "⭐";
+    wrap.appendChild(el("div", "bigstars", stars || "⭐"));
+    wrap.appendChild(el("p", null, "Звёзд: " + S.stars + ". С первого раза: " + okN + " из " + S.items.length));
+    if (S.best >= 2) wrap.appendChild(el("p", null, "🔥 Лучшая серия: " + S.best));
+    var again = S.results.filter(function (r) { return !r.ok; }).map(function (r) { return r.word; });
+    if (again.length) {
+      var a = el("div", "bubble again");
+      a.textContent = "Ещё потренируем: " + again.join(", ");
+      wrap.appendChild(a);
+    } else {
+      wrap.appendChild(el("p", null, "Все слова с первого раза. Вот это да!"));
+    }
+    var acts = el("div", "acts");
+    var game = S.game;
+    var b1 = el("button", "primary", "🔁 Ещё раз");
+    b1.onclick = function () { startGame(game); };
+    var b2 = el("button", "ghost", "🎮 Другая игра");
+    b2.onclick = showMenu;
+    acts.appendChild(b1); acts.appendChild(b2);
+    if (IN_TG) {
+      var b3 = el("button", "finish", "✅ Закончить");
+      var payload = buildPayload();
+      b3.onclick = function () {
+        b3.disabled = true;
+        try { TG.sendData(JSON.stringify(payload)); }
+        catch (e) { b3.disabled = false; b3.textContent = "Не получилось. Нажми ещё раз"; }
+      };
+      acts.appendChild(b3);
+    }
+    wrap.appendChild(acts);
+    app.appendChild(wrap);
+    window.scrollTo(0, 0);
+  }
+
+  /* ---------- старт ---------- */
+  function boot() {
+    fetch("data.json", { cache: "no-cache" })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (d) { DATA = d; showMenu(); })
+      .catch(function () {
+        clear(app);
+        app.appendChild(annaRow("Ой, слова не загрузились. Закрой игру и открой ещё раз 🙂"));
+      });
+  }
+  boot();
+
+  // для проверок
+  window.__game = { get S() { return S; }, buildPayload: function () { return buildPayload(); } };
+})();
+</script>
+</body>
+</html>

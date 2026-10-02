@@ -1,0 +1,1455 @@
+{
+ "v": 1,
+ "stress": [
+  {
+   "word": "ваза",
+   "idx": 1
+  },
+  {
+   "word": "бумага",
+   "idx": 3
+  },
+  {
+   "word": "влага",
+   "idx": 2
+  },
+  {
+   "word": "воробей",
+   "idx": 5
+  },
+  {
+   "word": "лисица",
+   "idx": 3
+  },
+  {
+   "word": "синица",
+   "idx": 3
+  },
+  {
+   "word": "корова",
+   "idx": 3
+  },
+  {
+   "word": "ворона",
+   "idx": 3
+  },
+  {
+   "word": "сорока",
+   "idx": 3
+  },
+  {
+   "word": "собака",
+   "idx": 3
+  },
+  {
+   "word": "капуста",
+   "idx": 3
+  },
+  {
+   "word": "берёза",
+   "idx": 3
+  },
+  {
+   "word": "карандаш",
+   "idx": 6
+  },
+  {
+   "word": "пенал",
+   "idx": 3
+  },
+  {
+   "word": "тетрадь",
+   "idx": 4
+  },
+  {
+   "word": "ученик",
+   "idx": 4
+  },
+  {
+   "word": "учитель",
+   "idx": 2
+  },
+  {
+   "word": "машина",
+   "idx": 3
+  },
+  {
+   "word": "ягода",
+   "idx": 0
+  },
+  {
+   "word": "мороз",
+   "idx": 3
+  },
+  {
+   "word": "молоко",
+   "idx": 5
+  },
+  {
+   "word": "деревня",
+   "idx": 3
+  },
+  {
+   "word": "лопата",
+   "idx": 3
+  },
+  {
+   "word": "сапоги",
+   "idx": 5
+  },
+  {
+   "word": "суббота",
+   "idx": 4
+  },
+  {
+   "word": "ручей",
+   "idx": 3
+  },
+  {
+   "word": "листья",
+   "idx": 1
+  },
+  {
+   "word": "осень",
+   "idx": 0
+  },
+  {
+   "word": "книга",
+   "idx": 2
+  },
+  {
+   "word": "уроки",
+   "idx": 2
+  }
+ ],
+ "syllables": [
+  {
+   "word": "книга",
+   "parts": [
+    "кни",
+    "га"
+   ]
+  },
+  {
+   "word": "прописи",
+   "parts": [
+    "про",
+    "пи",
+    "си"
+   ]
+  },
+  {
+   "word": "краски",
+   "parts": [
+    "крас",
+    "ки"
+   ]
+  },
+  {
+   "word": "карандаши",
+   "parts": [
+    "ка",
+    "ран",
+    "да",
+    "ши"
+   ]
+  },
+  {
+   "word": "уроки",
+   "parts": [
+    "у",
+    "ро",
+    "ки"
+   ]
+  },
+  {
+   "word": "корова",
+   "parts": [
+    "ко",
+    "ро",
+    "ва"
+   ]
+  },
+  {
+   "word": "ворона",
+   "parts": [
+    "во",
+    "ро",
+    "на"
+   ]
+  },
+  {
+   "word": "лисица",
+   "parts": [
+    "ли",
+    "си",
+    "ца"
+   ]
+  },
+  {
+   "word": "собака",
+   "parts": [
+    "со",
+    "ба",
+    "ка"
+   ]
+  },
+  {
+   "word": "сорока",
+   "parts": [
+    "со",
+    "ро",
+    "ка"
+   ]
+  },
+  {
+   "word": "пенал",
+   "parts": [
+    "пе",
+    "нал"
+   ]
+  },
+  {
+   "word": "тетрадь",
+   "parts": [
+    "тет",
+    "радь"
+   ]
+  },
+  {
+   "word": "ученик",
+   "parts": [
+    "у",
+    "че",
+    "ник"
+   ]
+  },
+  {
+   "word": "машина",
+   "parts": [
+    "ма",
+    "ши",
+    "на"
+   ]
+  },
+  {
+   "word": "ягода",
+   "parts": [
+    "я",
+    "го",
+    "да"
+   ]
+  },
+  {
+   "word": "мороз",
+   "parts": [
+    "мо",
+    "роз"
+   ]
+  },
+  {
+   "word": "класс",
+   "parts": [
+    "класс"
+   ]
+  },
+  {
+   "word": "заяц",
+   "parts": [
+    "за",
+    "яц"
+   ]
+  },
+  {
+   "word": "берёза",
+   "parts": [
+    "бе",
+    "рё",
+    "за"
+   ]
+  },
+  {
+   "word": "молоко",
+   "parts": [
+    "мо",
+    "ло",
+    "ко"
+   ]
+  },
+  {
+   "word": "капуста",
+   "parts": [
+    "ка",
+    "пус",
+    "та"
+   ]
+  },
+  {
+   "word": "линейка",
+   "parts": [
+    "ли",
+    "ней",
+    "ка"
+   ]
+  },
+  {
+   "word": "учительница",
+   "parts": [
+    "у",
+    "чи",
+    "тель",
+    "ни",
+    "ца"
+   ]
+  },
+  {
+   "word": "работа",
+   "parts": [
+    "ра",
+    "бо",
+    "та"
+   ]
+  },
+  {
+   "word": "девочка",
+   "parts": [
+    "де",
+    "воч",
+    "ка"
+   ]
+  },
+  {
+   "word": "мальчик",
+   "parts": [
+    "маль",
+    "чик"
+   ]
+  },
+  {
+   "word": "рыба",
+   "parts": [
+    "ры",
+    "ба"
+   ]
+  },
+  {
+   "word": "яблоко",
+   "parts": [
+    "яб",
+    "ло",
+    "ко"
+   ]
+  },
+  {
+   "word": "окно",
+   "parts": [
+    "ок",
+    "но"
+   ]
+  },
+  {
+   "word": "ёж",
+   "parts": [
+    "ёж"
+   ]
+  },
+  {
+   "word": "снег",
+   "parts": [
+    "снег"
+   ]
+  },
+  {
+   "word": "дом",
+   "parts": [
+    "дом"
+   ]
+  },
+  {
+   "word": "лес",
+   "parts": [
+    "лес"
+   ]
+  }
+ ],
+ "sound": [
+  {
+   "word": "Ира",
+   "kind": "v",
+   "trap": false,
+   "name": true
+  },
+  {
+   "word": "Дима",
+   "kind": "c",
+   "trap": false,
+   "name": true
+  },
+  {
+   "word": "Оля",
+   "kind": "v",
+   "trap": false,
+   "name": true
+  },
+  {
+   "word": "Вера",
+   "kind": "c",
+   "trap": false,
+   "name": true
+  },
+  {
+   "word": "Таня",
+   "kind": "c",
+   "trap": false,
+   "name": true
+  },
+  {
+   "word": "Яша",
+   "kind": "c",
+   "trap": true,
+   "name": true
+  },
+  {
+   "word": "Аля",
+   "kind": "v",
+   "trap": false,
+   "name": true
+  },
+  {
+   "word": "Никита",
+   "kind": "c",
+   "trap": false,
+   "name": true
+  },
+  {
+   "word": "Юля",
+   "kind": "c",
+   "trap": true,
+   "name": true
+  },
+  {
+   "word": "Люда",
+   "kind": "c",
+   "trap": false,
+   "name": true
+  },
+  {
+   "word": "Эля",
+   "kind": "v",
+   "trap": false,
+   "name": true
+  },
+  {
+   "word": "Антон",
+   "kind": "v",
+   "trap": false,
+   "name": true
+  },
+  {
+   "word": "Игорь",
+   "kind": "v",
+   "trap": false,
+   "name": true
+  },
+  {
+   "word": "Ульяна",
+   "kind": "v",
+   "trap": false,
+   "name": true
+  },
+  {
+   "word": "Мила",
+   "kind": "c",
+   "trap": false,
+   "name": true
+  },
+  {
+   "word": "Егор",
+   "kind": "c",
+   "trap": true,
+   "name": true
+  },
+  {
+   "word": "утка",
+   "kind": "v",
+   "trap": false,
+   "name": false
+  },
+  {
+   "word": "арбуз",
+   "kind": "v",
+   "trap": false,
+   "name": false
+  },
+  {
+   "word": "окно",
+   "kind": "v",
+   "trap": false,
+   "name": false
+  },
+  {
+   "word": "улица",
+   "kind": "v",
+   "trap": false,
+   "name": false
+  },
+  {
+   "word": "эхо",
+   "kind": "v",
+   "trap": false,
+   "name": false
+  },
+  {
+   "word": "ива",
+   "kind": "v",
+   "trap": false,
+   "name": false
+  },
+  {
+   "word": "иголка",
+   "kind": "v",
+   "trap": false,
+   "name": false
+  },
+  {
+   "word": "облако",
+   "kind": "v",
+   "trap": false,
+   "name": false
+  },
+  {
+   "word": "яблоко",
+   "kind": "c",
+   "trap": true,
+   "name": false
+  },
+  {
+   "word": "ёлка",
+   "kind": "c",
+   "trap": true,
+   "name": false
+  },
+  {
+   "word": "юла",
+   "kind": "c",
+   "trap": true,
+   "name": false
+  },
+  {
+   "word": "ёж",
+   "kind": "c",
+   "trap": true,
+   "name": false
+  },
+  {
+   "word": "яма",
+   "kind": "c",
+   "trap": true,
+   "name": false
+  },
+  {
+   "word": "ель",
+   "kind": "c",
+   "trap": true,
+   "name": false
+  },
+  {
+   "word": "юбка",
+   "kind": "c",
+   "trap": true,
+   "name": false
+  },
+  {
+   "word": "лиса",
+   "kind": "c",
+   "trap": false,
+   "name": false
+  },
+  {
+   "word": "стол",
+   "kind": "c",
+   "trap": false,
+   "name": false
+  },
+  {
+   "word": "мост",
+   "kind": "c",
+   "trap": false,
+   "name": false
+  },
+  {
+   "word": "крыша",
+   "kind": "c",
+   "trap": false,
+   "name": false
+  },
+  {
+   "word": "дом",
+   "kind": "c",
+   "trap": false,
+   "name": false
+  },
+  {
+   "word": "молоко",
+   "kind": "c",
+   "trap": false,
+   "name": false
+  },
+  {
+   "word": "ветер",
+   "kind": "c",
+   "trap": false,
+   "name": false
+  }
+ ],
+ "dictionary": [
+  {
+   "word": "берёза",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "е",
+     "options": [
+      "е",
+      "и",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "быстро",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "ы",
+     "options": [
+      "ы",
+      "и",
+      "е"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "вдруг",
+   "groups": [
+    {
+     "pos": [
+      4
+     ],
+     "answer": "г",
+     "options": [
+      "г",
+      "к",
+      "х"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "весело",
+   "groups": [
+    {
+     "pos": [
+      3
+     ],
+     "answer": "е",
+     "options": [
+      "е",
+      "и",
+      "я"
+     ]
+    },
+    {
+     "pos": [
+      5
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "ветер",
+   "groups": [
+    {
+     "pos": [
+      3
+     ],
+     "answer": "е",
+     "options": [
+      "е",
+      "и",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "воробей",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    },
+    {
+     "pos": [
+      3
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "ворона",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    },
+    {
+     "pos": [
+      5
+     ],
+     "answer": "а",
+     "options": [
+      "а",
+      "о",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "город",
+   "groups": [
+    {
+     "pos": [
+      3
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "девочка",
+   "groups": [
+    {
+     "pos": [
+      3
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "дежурный",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "е",
+     "options": [
+      "е",
+      "и",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "деревня",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "е",
+     "options": [
+      "е",
+      "и",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "завод",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "а",
+     "options": [
+      "а",
+      "о",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "заяц",
+   "groups": [
+    {
+     "pos": [
+      2
+     ],
+     "answer": "я",
+     "options": [
+      "я",
+      "е",
+      "и"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "капуста",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "а",
+     "options": [
+      "а",
+      "о",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "карандаш",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "а",
+     "options": [
+      "а",
+      "о",
+      "я"
+     ]
+    },
+    {
+     "pos": [
+      3
+     ],
+     "answer": "а",
+     "options": [
+      "а",
+      "о",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "класс",
+   "groups": [
+    {
+     "pos": [
+      3,
+      4
+     ],
+     "answer": "сс",
+     "options": [
+      "сс",
+      "с"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "коньки",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "корова",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    },
+    {
+     "pos": [
+      5
+     ],
+     "answer": "а",
+     "options": [
+      "а",
+      "о",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "лисица",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "и",
+     "options": [
+      "и",
+      "е",
+      "ы"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "лопата",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "машина",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "а",
+     "options": [
+      "а",
+      "о",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "медведица",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "е",
+     "options": [
+      "е",
+      "и",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "медведь",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "е",
+     "options": [
+      "е",
+      "и",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "молоко",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    },
+    {
+     "pos": [
+      3
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "мороз",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "Москва",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "одежда",
+   "groups": [
+    {
+     "pos": [
+      0
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "пальто",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "а",
+     "options": [
+      "а",
+      "о",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "пенал",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "е",
+     "options": [
+      "е",
+      "и",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "петух",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "е",
+     "options": [
+      "е",
+      "и",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "посуда",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "работа",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "а",
+     "options": [
+      "а",
+      "о",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "рабочий",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "а",
+     "options": [
+      "а",
+      "о",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "ребята",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "е",
+     "options": [
+      "е",
+      "и",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "русский",
+   "groups": [
+    {
+     "pos": [
+      2,
+      3
+     ],
+     "answer": "сс",
+     "options": [
+      "сс",
+      "с"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "сапоги",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "а",
+     "options": [
+      "а",
+      "о",
+      "я"
+     ]
+    },
+    {
+     "pos": [
+      3
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "скоро",
+   "groups": [
+    {
+     "pos": [
+      4
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "собака",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "сорока",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "суббота",
+   "groups": [
+    {
+     "pos": [
+      2,
+      3
+     ],
+     "answer": "бб",
+     "options": [
+      "бб",
+      "б"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "тетрадь",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "е",
+     "options": [
+      "е",
+      "и",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "товарищ",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "ученик",
+   "groups": [
+    {
+     "pos": [
+      2
+     ],
+     "answer": "е",
+     "options": [
+      "е",
+      "и",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "учитель",
+   "groups": [
+    {
+     "pos": [
+      4
+     ],
+     "answer": "е",
+     "options": [
+      "е",
+      "и",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "учительница",
+   "groups": [
+    {
+     "pos": [
+      4
+     ],
+     "answer": "е",
+     "options": [
+      "е",
+      "и",
+      "я"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "хороший",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "хорошо",
+   "groups": [
+    {
+     "pos": [
+      1
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    },
+    {
+     "pos": [
+      3
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "ягода",
+   "groups": [
+    {
+     "pos": [
+      2
+     ],
+     "answer": "о",
+     "options": [
+      "о",
+      "а"
+     ]
+    }
+   ]
+  },
+  {
+   "word": "язык",
+   "groups": [
+    {
+     "pos": [
+      0
+     ],
+     "answer": "я",
+     "options": [
+      "я",
+      "е",
+      "и"
+     ]
+    }
+   ]
+  }
+ ]
+}
