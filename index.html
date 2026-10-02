@@ -986,12 +986,38 @@ h2.task { font-size: 24px; }
 
   /* --- «Не понимаю»: следующее объяснение rule_kid по кругу --- */
   var KID_IDX = {};
-  function nextKid(sid) {
+  // сравнение без тегов, дефисов, ё=е и с одинаковыми буквами подряд (ли-си-и-ица = лисица)
+  function squash(s) {
+    return String(s).replace(/<[^>]+>/g, "").toLowerCase().replace(/ё/g, "е").replace(/[^а-яa-z']/g, "").replace(/(.)\1+/g, "$1");
+  }
+  // объяснение не должно разбирать именно текущее слово: иначе оно выдаст ответ
+  function kidFits(kid, ex) {
+    if (!ex || ex.type === "sentence") return true;
+    var w = squash(ex.word || "");
+    if (w.length >= 3 && squash(kid).indexOf(w) >= 0) return false;
+    if (ex.item && ex.item.trap && kid.indexOf("й'") >= 0) return false;
+    return true;
+  }
+  function nextKid(sid, ex) {
     var kids = SK(sid).rule_kid;
     var i = KID_IDX[sid] == null ? 1 : KID_IDX[sid];
-    KID_IDX[sid] = i + 1;
-    return kids[i % kids.length];
+    var n = kids.length, pick = i % n, used = 1;
+    for (var k = 0; k < n; k++) {
+      if (kidFits(kids[(i + k) % n], ex)) { pick = (i + k) % n; used = k + 1; break; }
+    }
+    KID_IDX[sid] = i + used;
+    return kids[pick];
   }
+  // пример «Вот пример» берём на другом слове, чем текущее
+  function pickExample(sk, ex) {
+    var list = sk.examples, n = list.length;
+    for (var k = 0; k < n; k++) {
+      var cand = list[(R_EX.n + k) % n];
+      if (squash(cand.split(" — ")[0]) !== squash(ex.word || "")) { R_EX.n += k + 1; return cand; }
+    }
+    return list[R_EX.n++ % n];
+  }
+  var R_EX = { n: 0 };
 
   /* --- проверка слогов (порт curriculum.check_syl_split / split_feedback) --- */
   function checkSplit(word, parts) {
@@ -1005,10 +1031,10 @@ h2.task { font-size: 24px; }
     if (!parts.length || parts.map(norm).join("") !== norm(word))
       return "Склей свои части вместе: получится ли слово «" + word + "»? Буквы терять нельзя.";
     if (parts.length !== n)
-      return "В слове «" + word + "» гласных букв: " + n + ". Значит, и частей должно быть " + n + ". А у тебя частей: " + parts.length + ".";
+      return "Посчитай гласные в слове «" + word + "»: сколько их — столько и частей. А у тебя частей: " + parts.length + ".";
     var bad = find(parts, function (p) { return countV(p) !== 1; });
     if (bad) return "Посмотри на часть «" + bad + "»: в слоге должна быть ровно одна гласная.";
-    return "Посчитай гласные в слове: столько и частей.";
+    return "Посчитай гласные в слове «" + word + "»: столько их — столько и частей.";
   }
 
   /* =====================================================================
@@ -1069,7 +1095,7 @@ h2.task { font-size: 24px; }
         recordMiss(ex, o.mode);
         feedback("soft", ex.type === "syl_split" ? "Почти! Давай проверим. " + splitFeedback(ex.word, ans || []) : ex.T.h1);
       } else if (ex.att === 2) {
-        var kid = ex.item.trap ? SK(ex.skill).rule_kid[3] : nextKid(ex.skill);
+        var kid = nextKid(ex.skill, ex);
         feedback("soft", ex.T.h2.replace(KIDMARK, kid));
       } else finish(false, true);
       scrollTo(fb);
@@ -1085,14 +1111,19 @@ h2.task { font-size: 24px; }
       helpBtn.onclick = function () {
         if (R.locked) return;
         var sk = SK(ex.skill);
-        var kid = nextKid(sk.id);
-        var exm = sk.examples[R.helpN++ % sk.examples.length];
+        var kid = nextKid(sk.id, ex);
+        var exm = pickExample(sk, ex);
+        R.helpN++;
         clear(helpBox);
         helpBox.className = "helpbox";
         helpBox.appendChild(el("div", "lbl", "Давай по-другому:"));
         helpBox.appendChild(richEl("div", null, kid));
         helpBox.appendChild(el("div", "lbl", "Вот пример:"));
         helpBox.appendChild(richEl("div", "ex", exm));
+        if (ex.T.my) {
+          helpBox.appendChild(el("div", "lbl", "А теперь твоё слово:"));
+          helpBox.appendChild(richEl("div", null, ex.T.my));
+        }
         scrollTo(helpBox);
       };
       box.appendChild(helpBtn);
@@ -1208,7 +1239,7 @@ h2.task { font-size: 24px; }
     row.appendChild(w);
     row.appendChild(sayBtn(it.word));
     box.appendChild(row);
-    box.appendChild(el("div", "task small", "Позови слово издалека: ко-ро-о-ова!"));
+    box.appendChild(el("div", "task small", ex.T.sub));
     ex.revealUI = function () {
       tiles.forEach(function (x) { x.disabled = true; x.style.opacity = 1; });
       tiles[it.idx].className = "t good"; tiles[it.idx].textContent = it.word.charAt(it.idx) + "́";
@@ -1807,7 +1838,7 @@ h2.task { font-size: 24px; }
     app.appendChild(m);
   }
   function buildItems(game) {
-    if (game === "stress") return pick(DATA.stress, ROUND).map(function (x) { return { word: x.word, idx: x.idx }; });
+    if (game === "stress") return pick(DATA.stress, ROUND).map(function (x) { return { word: x.word, idx: x.idx, sub: x.sub, h1: x.h1 }; });
     if (game === "clap") return pick(DATA.syllables, ROUND);
     if (game === "spy") return pick(DATA.sound, ROUND);
     return pick(DATA.dictionary, ROUND);
@@ -1914,7 +1945,7 @@ h2.task { font-size: 24px; }
     row.appendChild(w);
     row.appendChild(sayBtn(it.word));
     box.appendChild(row);
-    box.appendChild(el("div", "task small", "Позови слово издалека: ко-ро-о-ова!"));
+    box.appendChild(el("div", "task small", it.sub));
   }
   function onStressTap(it, i, tiles) {
     if (S.locked) return;
@@ -1936,7 +1967,7 @@ h2.task { font-size: 24px; }
       S.cur.missed = true;
       tiles[i].className = "t soft shake";
       tiles[i].disabled = true;
-      gfeedback("soft", SOFT);
+      gfeedback("soft", it.h1);
     }
   }
   function lockTiles(tiles) { tiles.forEach(function (t) { t.disabled = true; t.style.opacity = "1"; }); }
@@ -1983,7 +2014,7 @@ h2.task { font-size: 24px; }
       } else {
         S.cur.missed = true;
         n = 0; count.textContent = "0";
-        gfeedback("soft", SOFT + ". В каждом слоге одна гласная.");
+        gfeedback("soft", SOFT + ": слово «" + it.word + "». В каждом слоге одна гласная.");
       }
     };
     r2.appendChild(reset); r2.appendChild(done);
@@ -2033,7 +2064,7 @@ h2.task { font-size: 24px; }
         S.cur.missed = true;
         btns[k].classList.add("soft", "shake");
         btns[k].disabled = true;
-        gfeedback("soft", SOFT + ". Протяни первый звук: «" + first.toLowerCase() + "…»");
+        gfeedback("soft", SOFT + ": протяни первый звук слова «" + it.word + "». Он поётся?");
       }
     }
     bv.onclick = function () { answer("v"); };
@@ -2094,7 +2125,7 @@ h2.task { font-size: 24px; }
             S.cur.missed = true;
             b.classList.add("soft", "shake");
             b.disabled = true;
-            gfeedback("soft", SOFT);
+            gfeedback("soft", it.h1);
           }
         };
         ch.appendChild(b);
