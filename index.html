@@ -1465,6 +1465,7 @@ h2.task { font-size: 24px; }
   function lessonMastered(sid) {
     var sk = SK(sid);
     PR.stats.les = null; addStars(5); mark("p_stats");
+    DIARY.record("lesson_done", rules().mastery, rules().mastery, "skill", "rus-skill-" + String(sid).replace(/[^A-Za-z0-9_-]/g, ""));
     screen(showMenu);
     topbar(showMenu);
     var c = el("div", "final");
@@ -1636,6 +1637,8 @@ h2.task { font-size: 24px; }
   }
   function finishRun() {
     var run = RUN;
+    run.sid = run.sid || DIARY.newSid();
+    DIARY.record("lesson_done", run.ok, run.total, run.kind, run.sid);
     screen(showMenu);
     topbar(showMenu);
     var c = el("div", "final");
@@ -2174,6 +2177,8 @@ h2.task { font-size: 24px; }
     screen(showGames);
     topbar(showGames, "Игры");
     var okN = S.results.filter(function (r) { return r.ok; }).length;
+    S.sid = S.sid || DIARY.newSid();
+    DIARY.record("game", okN, S.items.length, name, S.sid);
     var wrap = el("div", "final");
     wrap.appendChild(el("div", "party", "🎉"));
     confetti(wrap);
@@ -2261,11 +2266,85 @@ h2.task { font-size: 24px; }
   }
 
   /* =====================================================================
+     ДНЕВНИК «Катиной школы»: каждое завершённое занятие/игра уходит туда ровно один раз.
+     initData подписан токеном этого бота, дневник это проверяет. Сначала событие кладётся в
+     очередь localStorage, потом отправляется (3 попытки); не дошло — досылается при следующем
+     открытии. Повторы не страшны: дневник узнаёт занятие по session_id. Ребёнку ничего не
+     показываем, ошибки тихие. Вне Telegram (нет initData) не делает ничего.
+     ===================================================================== */
+  var DIARY = (function () {
+    var API = "https://35-225-33-86.sslip.io/api/event", QKEY = "ks_diary_q", SUBJ = "rus";
+    var MAX_AGE = 14 * 24 * 3600 * 1000, seen = {}, last = { k: "", t: 0 };
+    function initData() { try { return window.Telegram.WebApp.initData || ""; } catch (e) { return ""; } }
+    function qGet() { try { var q = JSON.parse(localStorage.getItem(QKEY) || "[]"); return Array.isArray(q) ? q : []; } catch (e) { return []; } }
+    function qSet(q) { try { localStorage.setItem(QKEY, JSON.stringify(q.slice(-50))); } catch (e) {} }
+    function qDel(sid) { qSet(qGet().filter(function (x) { return x.session_id !== sid; })); }
+    function newSid() {
+      try { if (window.crypto && crypto.randomUUID) return "ks-" + crypto.randomUUID().replace(/-/g, "").slice(0, 24); } catch (e) {}
+      return "ks-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+    }
+    function post(ev, idata) {      // -> "ok" | "drop" | "keep"
+      var body = { initData: idata, session_id: ev.session_id, subject: ev.subject, kind: ev.kind, correct: ev.correct, total: ev.total };
+      if (ev.topic) body.topic = ev.topic;
+      try {
+        return fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), keepalive: true })
+          .then(function (r) { return r.ok ? "ok" : (r.status === 400 || r.status === 403) ? "drop" : "keep"; })
+          .catch(function () { return "keep"; });
+      } catch (e) { return Promise.resolve("keep"); }
+    }
+    function deliver(ev, tries) {
+      var id = initData(); if (!id) return;
+      post(ev, id).then(function (res) {
+        if (res === "ok" || res === "drop") { qDel(ev.session_id); return; }
+        if (tries > 1) setTimeout(function () { deliver(ev, tries - 1); }, tries === 3 ? 1500 : 4000);
+      });
+    }
+    return {
+      newSid: newSid,
+      // kind: "lesson_done" | "game"; sid — необязательный (один и тот же sid = то же занятие)
+      record: function (kind, correct, total, topic, sid) {
+        try {
+          total = Math.max(0, Math.min(100, Math.round(total) || 0));
+          correct = Math.max(0, Math.min(total, Math.round(correct) || 0));
+          if (!total || !initData()) return null;
+          topic = String(topic || "").toLowerCase().replace(/[^a-z0-9_]/g, "").slice(0, 40);
+          sid = sid || newSid();
+          var key = kind + "|" + topic + "|" + correct + "|" + total, now = Date.now();
+          if (seen[sid] || (key === last.k && now - last.t < 2500)) return sid;    // двойное срабатывание
+          seen[sid] = 1; last = { k: key, t: now };
+          var ev = { session_id: sid, subject: SUBJ, kind: kind, correct: correct, total: total, topic: topic, ts: now };
+          var q = qGet(); q.push(ev); qSet(q);
+          deliver(ev, 3);
+          return sid;
+        } catch (e) { return null; }
+      },
+      // при открытии: досылаем то, что не дошло
+      flush: function () {
+        try {
+          var now = Date.now(), q = qGet().filter(function (x) { return x && x.session_id && now - (x.ts || 0) < MAX_AGE; });
+          qSet(q);
+          q.forEach(function (ev, i) { setTimeout(function () { deliver(ev, 1); }, 400 * i); });
+        } catch (e) {}
+      },
+      // не дошедшее до дневника — в sendData боту (бот досылает с тем же session_id)
+      pending: function () {
+        try {
+          return qGet().slice(-12).map(function (x) {
+            return [x.session_id, x.kind === "game" ? "g" : "l", x.topic || null, x.correct, x.total];
+          });
+        } catch (e) { return []; }
+      }
+    };
+  })();
+
+  /* =====================================================================
      ЗАКОНЧИТЬ: итог занятия -> бот (sendData, v:2)
      ===================================================================== */
   function buildPayload() {
     var pd = PR.pend;
     var p = { v: 2, m: Math.round(pd.sec / 60), ms: pd.ms.slice(), g: JSON.parse(JSON.stringify(pd.g)), r: pd.r.slice() };
+    var ev = DIARY.pending();                                            // что не дошло до дневника — досылает бот
+    if (ev.length) p.ev = ev;
     while (bytes(JSON.stringify(p)) > 4000 && p.r.length) p.r.pop();     // обрезаем хвост
     return p;
   }
@@ -2353,10 +2432,13 @@ h2.task { font-size: 24px; }
       });
   }
   boot();
+  DIARY.flush();
 
   // для проверок
   window.__app = {
     get PR() { return PR; }, get S() { return S; }, get RUN() { return RUN; }, DBG: DBG,
+    DIARY: DIARY, T: { startRun: startRun, finishRun: finishRun, startGame: startGame, gFinal: gFinal, lessonMastered: lessonMastered,
+      run: function () { return RUN; }, game: function () { return S; } },
     buildPayload: buildPayload, flush: flush, showMenu: showMenu, pendAdd: pendAdd, mark: mark,
     setSess: function (sec) { sessSec = sec; }
   };
