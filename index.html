@@ -335,6 +335,10 @@ h2.task { font-size: 24px; }
 .big.mkbtn { min-height: 96px; }
 .big .mk { display: block; font-size: 44px; line-height: 1; }
 .big .mkc { display: block; font-size: 18px; line-height: 1.2; }
+.undo {
+  display: block; width: 100%; min-height: 64px; font-size: 26px; margin-top: 10px; color: var(--on-candy); background: var(--orange);
+  border: 4px solid var(--ink); border-radius: 20px; box-shadow: 4px 4px 0 var(--ink);
+}
 .sect { text-align: center; color: var(--muted); margin: 10px 0 0; }
 .box.fact h3 { font-size: 20px; }
 
@@ -394,6 +398,255 @@ h2.task { font-size: 24px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   .confetti { display: none !important; }
+}
+
+/* =====================================================================
+   «СКАЗОЧНЫЙ ЛЕС БУКВ» (выбрала Катя). Слой поверх старой «Конфетной тетради»:
+   старые правила выше оставлены, но здесь они переопределены и на экране не видны.
+   ===================================================================== */
+:root {
+  --paper: #fff8e6; --grid: transparent; --margin: transparent; --hole: transparent; --hole-edge: transparent;
+  --ink: #6b4423; --edge: #c9a46a; --fg: #4a2f1b; --muted: #664727; --surface: #fffbef;
+  --pink: #f9bdb5; --teal: #a6dfd6; --yellow: #ffe08e; --lilac: #d9c4f1; --orange: #ffc27d;
+  --green: #b9e58f; --soft-bg: #ffd9a6; --blue-line: rgba(100, 150, 70, .55);
+  --tile1: #f6a9a0; --tile2: #9bd3ea; --tile3: #ffd76a; --tile4: #cdb3ee; --tile5: #9fdcc6;
+  --on-candy: #3b2414; --hl: #9e2a27; --hl-candy: #a3203f; --good-ink: #14663a;
+  --wood: #8a5a2b; --wood-d: #6b4423; --leaf: #4f9a3a; --leaf-d: #2f6f23;
+  --sheet: rgba(255, 250, 235, .88); --line: rgba(107, 68, 35, .38);
+  --gloss: linear-gradient(180deg, rgba(255,255,255,.55) 0, rgba(255,255,255,.12) 45%, rgba(255,255,255,0) 60%);
+  --lift: 0 4px 0 rgba(107, 68, 35, .38), 0 9px 16px rgba(60, 40, 10, .22);
+  --lift-s: 0 3px 0 rgba(107, 68, 35, .38), 0 6px 10px rgba(60, 40, 10, .18);
+  --font: "Marmelad", "Nunito", "Trebuchet MS", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+}
+:root[data-theme="dark"] {
+  --paper: #18213d; --ink: #070c1c; --edge: #6f86c8; --fg: #f4efde; --muted: #bfc6df; --surface: #232f52;
+  --pink: #e8a0ab; --teal: #72d0c2; --yellow: #ebce6e; --lilac: #b89ee8; --orange: #efa95e;
+  --green: #8fd9a0; --soft-bg: #efb775; --blue-line: rgba(140, 175, 255, .6);
+  --tile1: #e88aa7; --tile2: #66b8e8; --tile3: #e8c545; --tile4: #ac90e8; --tile5: #55c7bf;
+  --on-candy: #1d1640; --hl: #ffa7c6; --hl-candy: #8d0f4c; --good-ink: #0c5330;
+  --sheet: rgba(14, 22, 48, .84); --line: rgba(10, 16, 40, .8);
+  --gloss: linear-gradient(180deg, rgba(255,255,255,.30) 0, rgba(255,255,255,.07) 45%, rgba(255,255,255,0) 60%);
+  --lift: 0 4px 0 rgba(4, 8, 24, .65), 0 9px 16px rgba(0, 0, 0, .35);
+  --lift-s: 0 3px 0 rgba(4, 8, 24, .65), 0 6px 10px rgba(0, 0, 0, .3);
+}
+
+/* фон: лес (телефон / Mac), тетрадные линейки и спираль убраны */
+html { background: #cfe3a8; }
+body { background: transparent; }
+body::before {
+  content: ""; position: fixed; inset: 0; width: auto; left: 0; z-index: -2; pointer-events: none;
+  background: url("img/bg_phone.webp") center / cover no-repeat;
+}
+@media (min-width: 700px) { body::before { background-image: url("img/bg_mac.webp"); } }
+body::after { content: ""; position: fixed; inset: 0; left: 0; width: auto; z-index: -1; pointer-events: none; background: none; }
+:root[data-theme="dark"] body::after {
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255, 236, 140, .95) 0 2px, rgba(255, 236, 140, 0) 6px),
+    radial-gradient(circle at 78% 14%, rgba(255, 236, 140, .9) 0 2px, rgba(255, 236, 140, 0) 6px),
+    radial-gradient(circle at 62% 38%, rgba(255, 236, 140, .85) 0 2px, rgba(255, 236, 140, 0) 6px),
+    radial-gradient(circle at 30% 63%, rgba(255, 236, 140, .9) 0 2px, rgba(255, 236, 140, 0) 6px),
+    radial-gradient(circle at 86% 72%, rgba(255, 236, 140, .85) 0 2px, rgba(255, 236, 140, 0) 6px),
+    radial-gradient(circle at 12% 88%, rgba(255, 236, 140, .9) 0 2px, rgba(255, 236, 140, 0) 6px),
+    linear-gradient(180deg, rgba(5, 10, 36, .72), rgba(8, 14, 44, .82));
+  animation: fireflies 5s ease-in-out infinite alternate;
+}
+@keyframes fireflies { from { filter: brightness(.9); } to { filter: brightness(1.18); } }
+.overlay::before, .overlay::after { display: none; }
+.overlay { background: var(--sheet); backdrop-filter: blur(6px); padding-left: 18px; }
+
+/* лист-«бумага» под содержимым; на главной сверху остаётся лес с лисой */
+#app { max-width: 520px; min-height: 100vh; min-height: 100dvh; padding: 12px 16px 36px; isolation: isolate; }
+#app::before {
+  content: ""; position: absolute; z-index: -1; left: 4px; right: 4px; top: var(--sheet-top, 0); bottom: 0;
+  background: var(--sheet); border-radius: 28px 28px 0 0; box-shadow: 0 -2px 24px rgba(40, 60, 20, .18);
+  backdrop-filter: blur(3px);
+}
+#app.home { --sheet-top: 232px; padding-top: 0; }
+body.hastabs #app { padding-bottom: 104px; }
+@media (min-width: 700px) {
+  #app { margin-top: 18px; min-height: calc(100vh - 18px); padding-left: 26px; padding-right: 26px; }
+  #app::before { border-radius: 32px; bottom: -14px; }
+  #app.home { --sheet-top: 244px; margin-top: 0; }
+}
+.menu, .list, .exlist, .opts, .choices, .row2, .wordrow, .chips, .dots, .strip, .box, .final, .rulecard, .kid, .fb, .helpbox, .top { padding-right: 0; }
+.exlist, .opts, .list, .box, .rulecard, .kid, .fb { margin-right: 0; }
+
+/* общий вид «глянцевых плиток» вместо тетрадных наклеек */
+.card, .big, .next, .primary, .finish, .chip, .back, .stat, .row, .ghost, .help, .undo, .sayb, .toast, .tag, .task, .streak,
+.exitem, .rulecard, .kid, .fb, .helpbox, .box, .t, .count, .clapbtn, .bubble, .pc, .strip, .dict-in {
+  border-color: var(--line); border-width: 2px;
+}
+.card, .big, .next, .primary, .finish, .chip, .row, .undo, .exitem, .rulecard, .kid, .fb, .tag, .task, .streak, .t, .clapbtn {
+  background-image: var(--gloss); box-shadow: var(--lift-s);
+}
+.card { box-shadow: var(--lift); }
+.big, .next, .primary, .finish, .undo { box-shadow: var(--lift); }
+.back, .stat, .sayb, .ghost, .help, .strip, .box, .helpbox, .toast, .bubble, .count { box-shadow: var(--lift-s); }
+.menu .card:nth-child(odd), .menu .card:nth-child(even), .list .row:nth-child(n), .exitem:nth-child(n), .rulecard, .tag, .task, .stat, .strip,
+.word .t:nth-child(n), .row2 > button, .box h3 { transform: none; }
+.back:active, .next:active, .big:active, .sayb:active, .card:active, .chip:active, .undo:active {
+  transform: translateY(3px); box-shadow: 0 1px 0 rgba(107, 68, 35, .38);
+}
+.card { border-radius: 26px; }
+.big, .next, .primary, .finish, .undo, .ghost, .help { border-radius: 22px; }
+.task { border-radius: 18px; font-weight: 700; }
+.task.small, .task.bar { background: none; box-shadow: none; border: 0; }
+.tag, .streak { border-radius: 16px; }
+.box h3 { border-width: 2px; box-shadow: var(--lift-s); }
+.sect { background: var(--surface); width: fit-content; margin: 14px auto 6px; padding: 2px 16px; border-radius: 14px; box-shadow: var(--lift-s); border: 2px solid var(--line); }
+.eyebrow { font-size: 18px; }
+
+/* верх: назад и звёзды */
+.top { margin-top: 12px; }
+#app.home .top { position: absolute; top: 10px; right: 16px; left: auto; margin: 0; z-index: 2; }
+.back { background: var(--surface); }
+.stat { background: linear-gradient(180deg, #ffe58a, #ffc14d); color: #4a2f10; border-color: #b9812a; }
+.stat::before { content: ""; display: inline-block; width: 20px; height: 20px; margin-right: 4px; vertical-align: -4px; background: url("img/aw_star_gold.webp") center / contain no-repeat; }
+
+/* Анна Буквовна: лиса и облачко */
+.anna { display: flex; align-items: center; gap: 10px; margin: 8px 0 14px; }
+.anna .face { display: none; }
+.fox {
+  position: relative; flex: none; width: 108px; height: 108px; overflow: hidden; border-radius: 28px;
+  background: radial-gradient(circle at 50% 38%, rgba(255, 244, 214, .95), rgba(255, 226, 170, .75)); border: 2px solid var(--line); box-shadow: var(--lift-s);
+}
+.fox img { position: absolute; left: 50%; top: 2px; width: 150px; max-width: none; transform: translateX(-52%); }
+.anna .say { flex: 1; min-width: 0; }
+.anna .nm { color: var(--hl); margin: 0 0 3px 8px; font-size: 18px; font-weight: 700; }
+.bubble { background: var(--surface); border: 2px solid var(--line); border-radius: 22px 22px 22px 6px; }
+:root[data-theme="dark"] .anna .nm { color: var(--hl); }
+
+/* главный экран */
+.hero { position: relative; height: 232px; margin: 0 -16px; }
+.hero .foxbig { position: absolute; left: 0; bottom: 0; width: 240px; height: 232px; overflow: hidden; z-index: 1; pointer-events: none; }
+.hero .foxbig img { position: absolute; left: 0; top: 8px; width: 250px; max-width: none; filter: drop-shadow(0 6px 8px rgba(40, 30, 10, .3)); }
+.hero .hi {
+  position: absolute; right: 14px; top: 44px; width: 52%; max-width: 250px; z-index: 2; padding: 12px 16px 14px; text-align: center;
+  background: var(--surface); border: 2px solid var(--line); border-radius: 26px 26px 26px 6px; box-shadow: var(--lift-s); font-size: 22px; line-height: 1.2; color: var(--fg);
+}
+.hero .hi small { display: block; font-size: 16px; margin-top: 4px; color: var(--muted); }
+.hero .plaque {
+  position: absolute; right: 14px; top: 156px; z-index: 2; padding: 6px 16px; font-size: 20px; color: #fff3d6; text-align: center;
+  background: linear-gradient(180deg, #a2703a, #7a4e25); border: 2px solid #5a3818; border-radius: 12px; box-shadow: var(--lift-s); transform: rotate(-2deg);
+}
+@media (min-width: 700px) {
+  .hero { margin: 0 -26px; height: 244px; }
+  .hero .hi { right: 70px; }
+  .hero .plaque { right: 70px; }
+}
+
+/* карточки меню и игр с картинками-иконками */
+.menu { gap: 16px 12px; }
+.card { min-height: 150px; padding: 10px 6px 12px; gap: 2px; background-color: var(--pink); border-color: rgba(107, 68, 35, .4); }
+.card .ico { display: none; }
+.card .icoimg { width: 76px; height: 76px; object-fit: contain; filter: drop-shadow(0 3px 3px rgba(60, 40, 10, .3)); flex: none; }
+.card b { font-size: 21px; font-weight: 700; }
+.card span.s { font-size: 16px; line-height: 1.15; opacity: .9; }
+.card.wide { min-height: 104px; background-color: #fff8e6; padding: 10px 14px; }
+.card.wide .icoimg { width: 82px; height: 82px; }
+.card.wide .playgo { flex: none; margin-left: auto; width: 62px; height: 62px; border-radius: 18px; display: grid; place-items: center; font-size: 28px; color: #fff;
+  background: linear-gradient(180deg, #78c04a, #3f8a2a); border: 2px solid #2d6a1c; box-shadow: var(--lift-s); }
+.card.wide .wprog { height: 14px; margin-top: 6px; border-radius: 9px; background: rgba(107, 68, 35, .18); overflow: hidden; }
+.card.wide .wprog i { display: block; height: 100%; border-radius: 9px; background: linear-gradient(180deg, #8ed35a, #4f9a3a); }
+.stk { display: none; }
+.card.k-pink { background-color: var(--pink); } .card.k-teal { background-color: var(--teal); }
+.card.k-yellow { background-color: var(--yellow); } .card.k-lilac { background-color: var(--lilac); }
+.card.wide.k-pink { background-color: #fff6df; }
+:root[data-theme="dark"] .card.wide.k-pink { background-color: #2b3760; color: var(--fg); }
+:root[data-theme="dark"] .card.wide.k-pink .s { color: var(--muted); }
+
+/* полоска звёзд на деревянной дощечке */
+.strip {
+  position: relative; background: linear-gradient(180deg, #b27a40, #8a5a2b); color: #fff3d6; border: 2px solid #5a3818; border-radius: 20px; margin: 4px 0 16px; padding: 8px 14px 12px;
+}
+.strip .srow { font-size: 21px; }
+.strip .srow span:last-child::before { content: ""; display: inline-block; width: 26px; height: 26px; margin-right: 4px; vertical-align: -6px; background: url("img/aw_star_gold.webp") center / contain no-repeat; }
+.pbar { border: 2px solid #5a3818; background: #f3e2bb; height: 16px; }
+.pbar i { background: linear-gradient(180deg, #8ed35a, #4f9a3a); }
+
+/* плитки-буквы и кнопки ответов */
+.t { border-radius: 16px; background-color: var(--tile1); }
+.word .t:nth-child(5n+1) { background-color: var(--tile1); } .word .t:nth-child(5n+2) { background-color: var(--tile2); }
+.word .t:nth-child(5n+3) { background-color: var(--tile3); } .word .t:nth-child(5n+4) { background-color: var(--tile4); } .word .t:nth-child(5n+5) { background-color: var(--tile5); }
+.word.stressw .t.static { background-image: none; }
+.word .t.good { box-shadow: 0 0 0 3px var(--surface), 0 0 0 6px var(--leaf-d), 0 6px 10px rgba(0, 0, 0, .3); }
+.word .t.good::after, .choices .big.good::after { border: 2px solid var(--leaf-d); }
+.big { background-color: var(--pink); }
+.choices .big:nth-child(4n+1) { background-color: var(--pink); } .choices .big:nth-child(4n+2) { background-color: var(--teal); }
+.choices .big:nth-child(4n+3) { background-color: var(--yellow); } .choices .big:nth-child(4n+4) { background-color: var(--lilac); }
+.big.good, .choices .big.good { background-color: var(--green); }
+.big.soft, .choices .big.soft { background-color: var(--orange); }
+.opts .big.opt, .big.opt { background-color: var(--surface); background-image: none; color: var(--fg); }
+.next, .finish { background-color: #9bdc6a; border-color: #2d6a1c; } .primary { background-color: #f4a6b9; }
+.undo { background-color: var(--orange); font-weight: 700; }
+.exitem:nth-child(4n+1) { background-color: var(--yellow); } .exitem:nth-child(4n+2) { background-color: var(--teal); }
+.exitem:nth-child(4n+3) { background-color: var(--pink); } .exitem:nth-child(4n+4) { background-color: var(--lilac); }
+.rulecard { background-color: var(--lilac); }
+.rulecard::after { border: 2px solid var(--line); }
+.kid { background-color: var(--teal); }
+.row { background-color: var(--pink); }
+.list .row:nth-child(4n+1) { background-color: var(--pink); } .list .row:nth-child(4n+2) { background-color: var(--teal); }
+.list .row:nth-child(4n+3) { background-color: var(--yellow); } .list .row:nth-child(4n+4) { background-color: var(--lilac); }
+.list .row.off { background-image: none; background-color: var(--surface); }
+.row .icoimg { width: 52px; height: 52px; object-fit: contain; flex: none; filter: drop-shadow(0 2px 2px rgba(60, 40, 10, .3)); }
+.row .n { border: 2px solid var(--line); background: linear-gradient(180deg, #ffe58a, #ffc14d); color: #4a2f10; }
+.dots i { border-width: 2px; border-color: var(--line); }
+.dots i.on { background: var(--yellow); border-color: var(--wood-d); }
+.dots i.ok { background: var(--green); } .dots i.no { background: var(--orange); }
+.clapbtn { background-color: var(--yellow); border-width: 3px; box-shadow: var(--lift); }
+.dict-in { border-width: 2px; }
+
+/* ответы: лиса рядом с сообщением */
+.fb { padding-left: 86px; text-align: left; min-height: 72px; display: flex; align-items: center; flex-wrap: wrap; align-content: center; }
+.fb > * { flex: 1 1 100%; }
+.fb::before {
+  content: ""; position: absolute; left: 6px; top: 50%; margin-top: -40px; width: 68px; height: 80px; border-radius: 18px; background: rgba(255, 244, 214, .85) url("img/fox_explain.webp") 38% -2px / 190% auto no-repeat;
+  border: 2px solid var(--line);
+}
+.fb.ok::before { background-image: url("img/fox_joy.webp"); }
+.fb.soft.think::before { background-image: url("img/fox_think.webp"); }
+.fb.ok::after { content: ""; }
+.fb.ok { background-color: var(--green); } .fb.soft { background-color: var(--soft-bg); }
+.fb .pieces, .fb .big-word { justify-content: flex-start; }
+.helpbox { background: var(--surface); }
+.helpbox .lbl { color: var(--hl); }
+
+/* финал */
+.party { display: none; }
+.foxhero { width: 190px; height: 200px; margin: 4px auto -6px; position: relative; }
+.foxhero img { height: 200px; width: auto; display: block; margin: 0 auto; filter: drop-shadow(0 6px 8px rgba(40, 30, 10, .3)); }
+.final h1 { color: var(--hl); font-weight: 700; text-shadow: 0 2px 0 rgba(255, 255, 255, .5); }
+:root[data-theme="dark"] .final h1 { text-shadow: 0 2px 0 rgba(0, 0, 0, .35); }
+.bigstars { font-size: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 2px; }
+.bigstars img { width: 36px; height: 36px; }
+.bigstars .e { font-size: 30px; }
+.final p { }
+.again { background: var(--surface); }
+
+/* награды */
+.ach .i { width: 52px; height: 52px; background: none; border: 0; border-radius: 0; font-size: 0; }
+.ach .i img { width: 52px; height: 52px; object-fit: contain; }
+.ach.lock { opacity: .55; filter: grayscale(.9); }
+
+/* нижняя панель вкладок */
+.tabs {
+  position: fixed; left: 8px; right: 8px; bottom: 8px; z-index: 12; display: none; max-width: 520px; margin: 0 auto;
+  background: var(--sheet); border: 2px solid var(--line); border-radius: 26px; box-shadow: 0 6px 20px rgba(40, 30, 10, .3); padding: 6px; gap: 4px; backdrop-filter: blur(6px);
+}
+body.hastabs .tabs { display: flex; }
+.tabs button { flex: 1; min-height: 58px; padding: 4px 2px; border-radius: 20px; background: transparent; color: var(--fg); font-size: 14px; line-height: 1.1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
+.tabs button .tic { font-size: 26px; line-height: 1; }
+.tabs button.on { background: linear-gradient(180deg, #cdeeaa, #a6d97b); color: #1f4d12; font-weight: 700; box-shadow: inset 0 0 0 2px rgba(47, 111, 35, .35); }
+:root[data-theme="dark"] .tabs button.on { background: linear-gradient(180deg, #4f8a45, #346f35); color: #eaffd8; }
+.toast { background: var(--surface); color: var(--fg); border: 2px solid var(--line); bottom: 92px; }
+
+/* лёгкие движения */
+@media (prefers-reduced-motion: reduce) { :root[data-theme="dark"] body::after { animation: none; } }
+@media (max-width: 400px) {
+  .fox { width: 92px; height: 92px; } .fox img { width: 128px; }
+  .hero .hi { font-size: 20px; padding: 10px 12px 12px; right: 10px; }
+  .card b { font-size: 19px; } .card.wide b { font-size: 22px; } .card .icoimg { width: 68px; height: 68px; }
+  .fb { padding-left: 80px; } .fb::before { width: 62px; }
 }
 </style>
 </head>
@@ -487,15 +740,15 @@ h2.task { font-size: 24px; }
   var SOFT = "Почти! Попробуй ещё";
 
   var GAMES = {
-    stress: { title: "Поймай ударение", ico: "⚡", sub: "Найди ударную гласную", skill: "stress", prefix: "stress:", kind: "stress", h: 262 },
-    clap:   { title: "Хлопушка", ico: "👏", sub: "Считаем слоги", skill: "syllables", prefix: "syl:", kind: "syl", h: 42 },
-    spy:    { title: "Шпион-звук", ico: "🕵️", sub: "Гласный или согласный?", skill: "vowels", prefix: "snd:", kind: "snd", h: 170 },
-    dict:   { title: "Вставь букву", ico: "✏️", sub: "Словарные слова", skill: "", prefix: "gap:", kind: "gap", h: 330 },
+    stress: { title: "Поймай ударение", ico: "⚡", img: "ic_basket.webp", sub: "Найди ударную гласную", skill: "stress", prefix: "stress:", kind: "stress", h: 262 },
+    clap:   { title: "Хлопушка", ico: "👏", img: "ic_abc.webp", sub: "Считаем слоги", skill: "syllables", prefix: "syl:", kind: "syl", h: 42 },
+    spy:    { title: "Шпион-звук", ico: "🕵️", img: "ic_lupa.webp", sub: "Гласный или согласный?", skill: "vowels", prefix: "snd:", kind: "snd", h: 170 },
+    dict:   { title: "Вставь букву", ico: "✏️", img: "ic_house.webp", sub: "Словарные слова", skill: "", prefix: "gap:", kind: "gap", h: 330 },
     // тема 2: слов для повторения нет (prefix пустой), поэтому «слово» в итог не попадает
-    ears:   { title: "Ушки или карандаш?", ico: "👂", sub: "Устная или письменная?", skill: "oralwritten", prefix: "", kind: "oral", topic: 2 },
-    train:  { title: "Поезд из предложений", ico: "🚂", sub: "Где ставить точку?", skill: "boundaries", prefix: "", kind: "bound", topic: 2 },
-    sign:   { title: "Знак на конце", ico: "❗", sub: "Точка, вопрос или радость", skill: "endmark", prefix: "", kind: "mark", topic: 2 },
-    who:    { title: "Кто что делает?", ico: "🎭", sub: "Сообщает, спрашивает…", skill: "purpose", prefix: "", kind: "purp", topic: 2 }
+    ears:   { title: "Ушки или карандаш?", ico: "👂", img: "ic_ear.webp", sub: "Устная или письменная?", skill: "oralwritten", prefix: "", kind: "oral", topic: 2 },
+    train:  { title: "Поезд из предложений", ico: "🚂", img: "ic_train.webp", sub: "Где ставить точку?", skill: "boundaries", prefix: "", kind: "bound", topic: 2 },
+    sign:   { title: "Знак на конце", ico: "❗", img: "ic_marks.webp", sub: "Точка, вопрос или радость", skill: "endmark", prefix: "", kind: "mark", topic: 2 },
+    who:    { title: "Кто что делает?", ico: "🎭", img: "ic_book.webp", sub: "Сообщает, спрашивает…", skill: "purpose", prefix: "", kind: "purp", topic: 2 }
   };
   var ORDER = ["stress", "clap", "spy", "dict", "ears", "train", "sign", "who"];
   var KIND = { syl_count: "syl", syl_split: "syl", stress: "stress", first_sound: "snd", sentence: "sent", gap: "gap",
@@ -766,6 +1019,8 @@ h2.task { font-size: 24px; }
     epoch++;
     stopSpeech();
     clear(app);
+    UND.locals = []; UND.btn = null; UND.pre = null;
+    app.className = ""; document.body.classList.remove("hastabs");
     setBack(back);
     window.scrollTo(0, 0);
   }
@@ -780,12 +1035,27 @@ h2.task { font-size: 24px; }
       b.onclick = back;
       top.appendChild(b);
     } else top.appendChild(el("div"));
-    top.appendChild(el("div", "stat", "⭐ " + PR.stats.stars));
+    top.appendChild(el("div", "stat", String(PR.stats.stars)));
     app.appendChild(top);
   }
-  function annaRow(text) {
+  /* ----- картинки «Сказочного леса букв» (img/*.webp) ----- */
+  function imgEl(src, cls) {
+    var i = new Image();
+    i.src = "img/" + src; i.alt = ""; i.decoding = "async"; i.draggable = false;
+    if (cls) i.className = cls;
+    return i;
+  }
+  function foxFace(pose) { var f = el("div", "fox"); f.appendChild(imgEl("fox_" + (pose || "hi") + ".webp")); return f; }
+  // большая лиса вместо смайла на итоговых экранах
+  function foxHero(pose) { var d = el("div", "foxhero"); d.setAttribute("aria-hidden", "true"); d.appendChild(imgEl("fox_" + pose + ".webp")); return d; }
+  function starsEl(n) {
+    var d = el("div", "bigstars"); d.setAttribute("aria-label", n + " звёзд");
+    for (var i = 0; i < n; i++) d.appendChild(imgEl("aw_star_gold.webp"));
+    return d;
+  }
+  function annaRow(text, pose) {
     var r = el("div", "anna");
-    r.appendChild(el("div", "face", "👩‍🏫"));
+    r.appendChild(foxFace(pose || "hi"));
     var sw = el("div", "say");
     sw.appendChild(el("div", "nm", "Анна Буквовна"));
     var b = el("div", "bubble");
@@ -843,7 +1113,7 @@ h2.task { font-size: 24px; }
     var ov = el("div", "overlay");
     ov.id = "breakOverlay";
     var inn = el("div", "in final");
-    inn.appendChild(el("div", "party", "🌟"));
+    inn.appendChild(foxHero("joy"));
     confetti(inn);
     inn.appendChild(el("h1", null, "Ты сегодня хорошо поработала!"));
     inn.appendChild(el("p", null, "Закончим или ещё одну игру?"));
@@ -881,39 +1151,49 @@ h2.task { font-size: 24px; }
     screen(null);
     if (maybeBreak()) return;
     var name = tgName();
-    app.appendChild(annaRow("Привет" + (name ? ", " + name : "") + "! Я Анна Буквовна. Чем займёмся?"));
+    app.className = "home";
+    var hero = el("div", "hero");
+    var fb = el("div", "foxbig"); fb.setAttribute("aria-hidden", "true"); fb.appendChild(imgEl("fox_hi.webp")); hero.appendChild(fb);
+    var hi = el("div", "hi", "Привет" + (name ? ", " + name : "") + "!");
+    hi.appendChild(el("small", null, "Чем займёмся?"));
+    hero.appendChild(hi);
+    hero.appendChild(el("div", "plaque", "Анна Буквовна"));
+    app.appendChild(hero);
     var strip = el("div", "strip"), srow = el("div", "srow");
     srow.appendChild(el("span", null, "Мои звёзды"));
-    srow.appendChild(el("span", null, "⭐ " + PR.stats.stars));
+    srow.appendChild(el("span", null, String(PR.stats.stars)));
     strip.appendChild(srow);
     var pb = el("div", "pbar"), pf = el("i");
     pf.style.width = Math.max(4, (PR.stats.stars % 50) * 2) + "%";
     pb.appendChild(pf); strip.appendChild(pb);
-    app.appendChild(strip);
     var nid = nextSkillId();
     var due = dueKeys().length;
     var items = [
-      { ico: "▶️", k: "pink", stk: "⭐", wide: 1, t: "Урок", s: nid ? "Дальше: " + SK(nid).title : "Все темы пройдены 🎉", h: 140, go: function () { lessonEntry(); } },
-      { ico: "📚", k: "teal", stk: "💖", t: "Темы", s: "Все 24 темы учебника", h: 205, go: showTopics },
-      { ico: "✍️", k: "yellow", stk: "🌈", t: "Тренировка", s: due ? "Пора повторить: " + due : "8 заданий вперемешку", h: 28, go: function () { startRun("training"); } },
-      { ico: "📖", k: "lilac", stk: "🍭", t: "Словарные слова", s: "Выучено " + learnedCount() + " из " + DATA.dictionary.length, h: 330, go: function () { startRun("dictionary"); } },
-      { ico: "🎧", k: "teal", stk: "🎵", t: "Диктант", s: "Слушай и пиши", h: 275, go: function () { startRun("dictation"); } },
-      { ico: "🎮", k: "pink", stk: "🎊", t: "Игры", s: ORDER.length + " игр на правилах", h: 55, go: showGames },
-      { ico: "📊", k: "yellow", stk: "🏆", t: "Мой прогресс", s: "Полоски, звёзды, награды", h: 170, go: showProgress }
+      { img: "ic_book.webp", ico: "▶️", k: "pink", wide: 1, t: "Урок", s: nid ? "Дальше: " + SK(nid).title : "Все темы пройдены 🎉", prog: nid ? skillLevel(nid) / rules().mastery : 1, go: function () { lessonEntry(); } },
+      { img: "ic_abc.webp", ico: "📚", k: "teal", t: "Темы", s: "Все 24 темы учебника", go: showTopics },
+      { img: "ic_lupa.webp", ico: "✍️", k: "yellow", t: "Тренировка", s: due ? "Пора повторить: " + due : "8 заданий вперемешку", go: function () { startRun("training"); } },
+      { img: "ic_house.webp", ico: "📖", k: "lilac", t: "Словарные слова", s: "Выучено " + learnedCount() + " из " + DATA.dictionary.length, go: function () { startRun("dictionary"); } },
+      { img: "ic_ear.webp", ico: "🎧", k: "teal", t: "Диктант", s: "Слушай и пиши", go: function () { startRun("dictation"); } },
+      { img: "ic_puzzle.webp", ico: "🎮", k: "pink", t: "Игры", s: ORDER.length + " игр на правилах", go: showGames },
+      { img: "aw_chest.webp", ico: "📊", k: "yellow", t: "Мой прогресс", s: "Полоски, звёзды, награды", go: showProgress }
     ];
     var m = el("div", "menu");
     items.forEach(function (it) {
       var b = el("button", "card k-" + it.k + (it.wide ? " wide" : ""));
-      b.appendChild(el("span", "stk", it.stk));
+      b.appendChild(imgEl(it.img, "icoimg"));
       b.appendChild(el("div", "ico", it.ico));
       var d = el("div");
+      d.style.flex = "1"; d.style.minWidth = "0";
       d.appendChild(el("b", null, it.t));
       d.appendChild(el("span", "s", it.s));
+      if (it.wide) { var wp = el("div", "wprog"), wi = el("i"); wi.style.width = Math.round(it.prog * 100) + "%"; wp.appendChild(wi); d.appendChild(wp); }
       b.appendChild(d);
+      if (it.wide) b.appendChild(el("div", "playgo", "▶"));
       b.onclick = it.go;
       m.appendChild(b);
     });
     app.appendChild(m);
+    app.appendChild(strip);
 
     var hint = el("div", "box");
     hint.appendChild(el("p", null, "❓ Спросить голосом или 🆘 помочь с домашкой — напиши Анне Буквовне в чат"));
@@ -928,6 +1208,23 @@ h2.task { font-size: 24px; }
     var fin = el("button", "finish wide", "✅ Закончить занятие");
     fin.onclick = showFinish;
     app.appendChild(fin);
+    tabs("home");
+  }
+
+  /* нижняя панель вкладок (только на главных экранах, не во время урока и игры) */
+  function tabs(active) {
+    var nav = document.getElementById("tabs");
+    if (!nav) { nav = el("nav", "tabs"); nav.id = "tabs"; nav.setAttribute("aria-label", "Разделы"); document.body.appendChild(nav); }
+    clear(nav);
+    [["home", "🏠", "Главная", showMenu], ["topics", "📚", "Темы", showTopics], ["games", "🎮", "Игры", showGames], ["prog", "🏆", "Успехи", showProgress]].forEach(function (t) {
+      var b = el("button", t[0] === active ? "on" : "");
+      b.appendChild(el("span", "tic", t[1]));
+      b.appendChild(el("span", null, t[2]));
+      if (t[0] === active) b.setAttribute("aria-current", "page");
+      b.onclick = t[3];
+      nav.appendChild(b);
+    });
+    document.body.classList.add("hastabs");
   }
 
   /* =====================================================================
@@ -1029,6 +1326,75 @@ h2.task { font-size: 24px; }
 
   /* --- «Не понимаю»: следующее объяснение rule_kid по кругу --- */
   var KID_IDX = {};
+
+  /* =====================================================================
+     «↩ Ой, не туда!»: отмена случайного нажатия (одна на вопрос).
+     Перед КАЖДЫМ нажатием на экране (фаза перехвата) запоминаем «слепок»: весь DOM приложения (те же узлы,
+     поэтому обработчики целы), прогресс PR, счёт игры S, серию RUN, ex.att, KID_IDX и локальные переменные
+     заданий (их регистрирует regLocal). Если нажатие оказалось промахом, виджет вызывает offerUndo(вопрос) —
+     появляется кнопка; нажатие по ней возвращает слепок: промах не засчитан, подсказки не продвинулись.
+     ===================================================================== */
+  var UND = { pre: null, locals: [], btn: null, doneFor: null };
+  function regLocal(getter) { UND.locals.push(getter); }
+  function undoDrop() { if (UND.btn) { if (UND.btn.parentNode) UND.btn.parentNode.removeChild(UND.btn); UND.btn = null; } }
+  function undoCapture() {
+    var dom = [], els = [app].concat([].slice.call(app.querySelectorAll("*")));
+    els.forEach(function (e) {
+      var kids = [], tx = [];
+      for (var c = e.firstChild; c; c = c.nextSibling) { kids.push(c); if (c.nodeType === 3) tx.push([c, c.data]); }
+      dom.push({ e: e, cls: e.getAttribute("class"), st: e.getAttribute("style"), dis: typeof e.disabled === "boolean" ? e.disabled : null, kids: kids, tx: tx });
+    });
+    var p = { dom: dom, pr: JSON.stringify(PR), kid: JSON.stringify(KID_IDX), locals: UND.locals.map(function (g) { return g(); }) };
+    if (S && S.box && S.box.isConnected) {
+      p.s = { ref: S, stars: S.stars, score: S.score, streak: S.streak, best: S.best, locked: S.locked, results: S.results.slice(), cur: JSON.parse(JSON.stringify(S.cur)) };
+    }
+    if (RUN) p.run = { ref: RUN, done: RUN.done, ok: RUN.ok, res: RUN.res.slice(), weak: RUN.weak.slice() };
+    var ce = window.__cur;
+    if (ce) p.ex = { ref: ce, att: ce.att, rev: ce.revealUI };
+    return p;
+  }
+  function undoRestore(p) {
+    p.dom.forEach(function (d) {
+      var e = d.e;
+      if (d.cls === null) e.removeAttribute("class"); else e.setAttribute("class", d.cls);
+      if (d.st === null) e.removeAttribute("style"); else e.setAttribute("style", d.st);
+      if (d.dis !== null) e.disabled = d.dis;
+      while (e.firstChild) e.removeChild(e.firstChild);
+      d.kids.forEach(function (k) { e.appendChild(k); });
+      d.tx.forEach(function (t) { t[0].data = t[1]; });
+    });
+    var secNow = PR.pend.sec;                 // время занятия идёт и при отмене — не откатываем
+    PR = JSON.parse(p.pr);
+    PR.pend.sec = Math.max(PR.pend.sec, secNow);
+    KID_IDX = JSON.parse(p.kid);
+    KEYS.forEach(mark);
+    if (p.s) { var o = p.s.ref; o.stars = p.s.stars; o.score = p.s.score; o.streak = p.s.streak; o.best = p.s.best; o.locked = p.s.locked; o.results = p.s.results; o.cur = p.s.cur; }
+    if (p.run) { var r = p.run.ref; r.done = p.run.done; r.ok = p.run.ok; r.res = p.run.res; r.weak = p.run.weak; }
+    if (p.ex) { p.ex.ref.att = p.ex.att; p.ex.ref.revealUI = p.ex.rev; }
+    p.locals.forEach(function (f) { if (f) f(); });
+  }
+  // нажатие оказалось промахом: показать кнопку отмены (один раз на вопрос)
+  function offerUndo(qkey) {
+    var p = UND.pre;
+    if (!p || UND.doneFor === qkey) return;
+    undoDrop();
+    var b = el("button", "undo", "↩ Ой, не туда!");
+    b.onclick = function () {
+      UND.doneFor = qkey;
+      undoRestore(p);
+      UND.btn = null; UND.pre = null;
+      toast("Хорошо, попробуй ещё раз 🙂");
+    };
+    var fb = app.querySelector(".fb");
+    if (fb && fb.parentNode) fb.parentNode.insertBefore(b, fb.nextSibling); else app.appendChild(b);
+    UND.btn = b;
+  }
+  app.addEventListener("click", function (e) {
+    var t = e.target;
+    if (t && t.closest && (t.closest(".undo") || t.closest(".sayb"))) return;
+    undoDrop();
+    try { UND.pre = undoCapture(); } catch (err) { UND.pre = null; }
+  }, true);
   // сравнение без тегов, дефисов, ё=е и с одинаковыми буквами подряд (ли-си-и-ица = лисица)
   function squash(s) {
     return String(s).replace(/<[^>]+>/g, "").toLowerCase().replace(/ё/g, "е").replace(/[^а-яa-z']/g, "").replace(/(.)\1+/g, "$1");
@@ -1088,6 +1454,7 @@ h2.task { font-size: 24px; }
     var my = epoch;
     window.__cur = ex;          // для проверок
     var R = { locked: false, helpN: 0, missed: false };
+    regLocal(function () { var a = R.locked, b = R.helpN, c = R.missed; return function () { R.locked = a; R.helpN = b; R.missed = c; }; });
     var wbox = el("div");
     var fb = el("div", "fb");
     var helpBox = el("div");
@@ -1139,8 +1506,9 @@ h2.task { font-size: 24px; }
         feedback("soft", ex.type === "syl_split" ? "Почти! Давай проверим. " + splitFeedback(ex.word, ans || []) : ex.T.h1);
       } else if (ex.att === 2) {
         var kid = nextKid(ex.skill, ex);
-        feedback("soft", ex.T.h2.replace(KIDMARK, kid));
+        feedback("soft think", ex.T.h2.replace(KIDMARK, kid));
       } else finish(false, true);
+      offerUndo(ex);
       scrollTo(fb);
     }
     function hit() { finish(ex.att === 0, false); }
@@ -1213,6 +1581,7 @@ h2.task { font-size: 24px; }
     box.appendChild(el("div", "task", "Раздели слово на слоги"));
     box.appendChild(el("div", "task small", "Нажимай на букву, после которой слог заканчивается"));
     var w = ex.word, cuts = {};
+    regLocal(function () { var c = JSON.parse(JSON.stringify(cuts)); return function () { cuts = c; }; });
     var row = el("div", "wordrow");
     var word = el("div", "word");
     row.appendChild(word);
@@ -1419,7 +1788,11 @@ h2.task { font-size: 24px; }
     box.appendChild(row);
     var chWrap = el("div");
     box.appendChild(chWrap);
-    var gi = 0, solved = {}, anyReveal = false, anyMiss = false;
+    var gi = 0, solved = {}, anyReveal = false, anyMiss = false, ts = { tries: 0, busy: false }, gen = 0;
+    regLocal(function () {
+      var a = gi, b = JSON.parse(JSON.stringify(solved)), c = anyReveal, d = anyMiss, t0 = ts, t1 = ts.tries, t2 = ts.busy;
+      return function () { gi = a; solved = b; anyReveal = c; anyMiss = d; ts = t0; ts.tries = t1; ts.busy = t2; gen++; };
+    });
     function paint(active) {
       clear(w);
       var inGroup = {};
@@ -1438,21 +1811,23 @@ h2.task { font-size: 24px; }
       var g = it.groups[gi];
       var opts = shuffle(g.options.slice());
       var ch = el("div", "choices " + (opts.length === 3 ? "three" : opts.length === 2 ? "" : "one"));
-      var tries = 0, busy = false;
+      ts = { tries: 0, busy: false };
+      var mine = ts;
       opts.forEach(function (op) {
         var b = el("button", "big", op);
         b.onclick = function () {
-          if (!A.alive() || busy) return;
-          tries++;
+          if (!A.alive() || mine.busy) return;
+          mine.tries++;
           if (op === g.answer) {
             b.classList.add("good"); solved[gi] = true;
-            if (tries > 1) anyMiss = true;
+            if (mine.tries > 1) anyMiss = true;
             advance(false);
           } else {
             if (!anyMiss) { anyMiss = true; recordMiss(ex, ex.mode || "dictionary"); A.feedback("soft", it.h1); }
             else A.feedback("soft", DATA.phrases.soft);
-            if (tries >= 2) { anyReveal = true; solved[gi] = true; b.classList.add("soft"); advance(true); }
+            if (mine.tries >= 2) { anyReveal = true; solved[gi] = true; b.classList.add("soft"); advance(true); }
             else { b.classList.add("soft", "shake"); b.disabled = true; }
+            offerUndo(ex);
           }
         };
         ch.appendChild(b);
@@ -1460,11 +1835,12 @@ h2.task { font-size: 24px; }
       chWrap.appendChild(ch);
       paint(gi);
       function advance(revealed) {
-        busy = true;
+        mine.busy = true;
         paint(-1);
         if (gi + 1 < it.groups.length) {
           A.feedback(revealed ? "soft" : "ok", revealed ? "Смотри: здесь «" + g.answer + "». Идём дальше." : rnd(PRAISE_GAME) + " Идём дальше.");
-          later(function () { gi++; options(); }, 900);
+          var g0 = gen;
+          later(function () { if (g0 !== gen) return; gi++; options(); }, 900);
           return;
         }
         clear(chWrap);
@@ -1492,7 +1868,7 @@ h2.task { font-size: 24px; }
   function lessonAllDone() {
     screen(showMenu);
     topbar(showMenu);
-    app.appendChild(annaRow("🎉 Все готовые темы у тебя пройдены! Остальные Анна Буквовна ещё готовит 📚"));
+    app.appendChild(annaRow("🎉 Все готовые темы у тебя пройдены! Остальные Анна Буквовна ещё готовит 📚", "joy"));
     var acts = el("div", "acts final");
     [["✍️ Тренировка", function () { startRun("training"); }], ["🎮 Игры", showGames], ["🏠 В меню", showMenu]].forEach(function (a, i) {
       var b = el("button", i === 2 ? "ghost wide" : "primary wide", a[0]); b.onclick = a[1]; app.appendChild(b);
@@ -1517,7 +1893,7 @@ h2.task { font-size: 24px; }
     screen(showMenu);
     topbar(showMenu);
     app.appendChild(el("div", "eyebrow", topicTitle(sk) + " · " + sk.title));
-    app.appendChild(annaRow("Смотри внимательно 👀"));
+    app.appendChild(annaRow("Смотри внимательно 👀", "explain"));
     var list = el("div", "exlist");
     sk.examples.forEach(function (e) { list.appendChild(richEl("div", "exitem", e)); });
     app.appendChild(list);
@@ -1538,7 +1914,7 @@ h2.task { font-size: 24px; }
     screen(showMenu);
     topbar(showMenu);
     app.appendChild(el("div", "eyebrow", sk.title));
-    app.appendChild(annaRow(best ? DATA.phrases.notice_best : DATA.phrases.notice_other));
+    app.appendChild(annaRow(best ? DATA.phrases.notice_best : DATA.phrases.notice_other, "explain"));
     app.appendChild(el("div", "task small", "📌 Запомни:"));
     app.appendChild(richEl("div", "rulecard", sk.rule));
     app.appendChild(richEl("div", "kid", sk.rule_kid[0]));
@@ -1552,7 +1928,7 @@ h2.task { font-size: 24px; }
     var sk = SK(sid);
     screen(showMenu);
     topbar(showMenu);
-    app.appendChild(annaRow("Продолжаем: " + sk.title + " 🙂\nПомнишь? " + sk.rule));
+    app.appendChild(annaRow("Продолжаем: " + sk.title + " 🙂\nПомнишь? " + sk.rule, "explain"));
     var go = el("button", "next", "Поехали! →");
     go.onclick = function () { lessonTask(sid); };
     app.appendChild(go);
@@ -1564,7 +1940,7 @@ h2.task { font-size: 24px; }
     screen(showMenu);
     topbar(showMenu);
     app.appendChild(el("div", "eyebrow", sk.title + " · расскажи"));
-    app.appendChild(annaRow("Давай поговорим! Здесь нет оценок, мне просто интересно 🙂"));
+    app.appendChild(annaRow("Давай поговорим! Здесь нет оценок, мне просто интересно 🙂", "think"));
     app.appendChild(el("div", "rulecard", t.q));
     var box = el("div");
     app.appendChild(box);
@@ -1635,10 +2011,10 @@ h2.task { font-size: 24px; }
     screen(showMenu);
     topbar(showMenu);
     var c = el("div", "final");
-    c.appendChild(el("div", "party", "🏆"));
+    c.appendChild(foxHero("joy"));
     confetti(c);
     c.appendChild(el("h1", null, "Навык освоен!"));
-    c.appendChild(el("div", "bigstars", "⭐⭐⭐⭐⭐"));
+    c.appendChild(starsEl(5));
     c.appendChild(el("p", null, "«" + sk.title + "»: " + rules().mastery + " верных ответа подряд на новых словах!"));
     var left = (sk.cards || []).slice(sk.tell && sk.tell.length ? 2 : 1);     // факты, которые ещё не показывали
     left.forEach(function (cd) { c.appendChild(factBox(cd)); });
@@ -1683,8 +2059,11 @@ h2.task { font-size: 24px; }
       list.appendChild(b);
     });
     app.appendChild(list);
+    tabs("topics");
   }
 
+  var SKILL_IMG = { syllables: "ic_abc.webp", stress: "ic_basket.webp", vowels: "ic_lupa.webp", sentence: "ic_puzzle.webp",
+    purpose: "ic_book.webp", oralwritten: "ic_ear.webp", boundaries: "ic_train.webp", endmark: "ic_marks.webp" };
   function showTopic(t) {
     screen(showTopics);
     topbar(showTopics, "Темы");
@@ -1693,6 +2072,7 @@ h2.task { font-size: 24px; }
     var list = el("div", "list");
     DATA.skills.filter(function (s) { return s.topic === t.n; }).forEach(function (sk) {
       var b = el("button", "row");
+      if (SKILL_IMG[sk.id]) b.appendChild(imgEl(SKILL_IMG[sk.id], "icoimg"));
       var g = el("div", "grow");
       g.appendChild(el("div", null, sk.title));
       g.appendChild(el("div", "bar", bar(skillLevel(sk.id))));
@@ -1813,7 +2193,7 @@ h2.task { font-size: 24px; }
     screen(showMenu);
     topbar(showMenu);
     var c = el("div", "final");
-    c.appendChild(el("div", "party", "🌟"));
+    c.appendChild(foxHero("joy"));
     confetti(c);
     c.appendChild(el("h1", null, "Готово!"));
     c.appendChild(el("p", null, "С первого раза получилось " + run.ok + " из " + run.total));
@@ -2006,6 +2386,7 @@ h2.task { font-size: 24px; }
       }
       var b = el("button", "card k-" + gk[gi % 4]);
       b.appendChild(el("span", "stk", gs[gi % 4]));
+      b.appendChild(imgEl(g.img, "icoimg"));
       b.appendChild(el("div", "ico", g.ico));
       var d = el("div");
       d.appendChild(el("b", null, g.title));
@@ -2016,6 +2397,7 @@ h2.task { font-size: 24px; }
       m.appendChild(b);
     });
     app.appendChild(m);
+    tabs("games");
   }
   function buildItems(game) {
     if (game === "ears") return pick(DATA.speech.oral, ROUND);
@@ -2077,7 +2459,7 @@ h2.task { font-size: 24px; }
   }
   function gfeedback(cls, text, extra) {
     clear(S.fb);
-    S.fb.className = "fb " + cls;
+    S.fb.className = "fb " + cls + (cls === "soft" && S.cur && S.cur.tries >= 2 ? " think" : "");
     S.fb.appendChild(document.createTextNode(text));
     if (extra) S.fb.appendChild(extra);
   }
@@ -2152,11 +2534,13 @@ h2.task { font-size: 24px; }
       lockTiles(tiles);
       gfeedback("soft", "Смотри: ударение на «" + it.word.charAt(it.idx) + "». Запомним!", stressWord(it));
       finishWord(it.word, 0, false);
+      offerUndo(it);
     } else {
       S.cur.missed = true;
       tiles[i].className = "t soft shake";
       tiles[i].disabled = true;
       gfeedback("soft", it.h1);
+      offerUndo(it);
     }
   }
   function lockTiles(tiles) { tiles.forEach(function (t) { t.disabled = true; t.style.opacity = "1"; }); }
@@ -2173,6 +2557,7 @@ h2.task { font-size: 24px; }
     var c = el("div", "clap");
     var count = el("div", "count", "0");
     var n = 0;
+    regLocal(function () { var v = n; return function () { n = v; }; });
     var btn = el("button", "clapbtn", "👏");
     btn.setAttribute("aria-label", "Хлопок");
     btn.onclick = function () {
@@ -2200,10 +2585,12 @@ h2.task { font-size: 24px; }
         gfeedback("soft", "Смотри, как делится слово: " + line, pieces);
         finishWord(it.word, 0, false);
         btn.disabled = done.disabled = reset.disabled = true;
+        offerUndo(it);
       } else {
         S.cur.missed = true;
         n = 0; count.textContent = "0";
         gfeedback("soft", SOFT + ": слово «" + it.word + "». В каждом слоге одна гласная.");
+        offerUndo(it);
       }
     };
     r2.appendChild(reset); r2.appendChild(done);
@@ -2249,11 +2636,13 @@ h2.task { font-size: 24px; }
         gfeedback("soft", msg, extra);
         finishWord(it.word, 0, false);
         bv.disabled = bc.disabled = true; btns[it.kind].style.opacity = 1;
+        offerUndo(it);
       } else {
         S.cur.missed = true;
         btns[k].classList.add("soft", "shake");
         btns[k].disabled = true;
         gfeedback("soft", SOFT + ": протяни первый звук слова «" + it.word + "». Он поётся?");
+        offerUndo(it);
       }
     }
     bv.onclick = function () { answer("v"); };
@@ -2284,10 +2673,12 @@ h2.task { font-size: 24px; }
           b.classList.add("soft"); btns[it.a].classList.add("good"); lockAll();
           gfeedback("soft", it.rv);
           finishWord(o.key, 0, false);
+          offerUndo(it);
         } else {
           S.cur.missed = true;
           b.classList.add("soft", "shake"); b.disabled = true;
           gfeedback("soft", it.h1);
+          offerUndo(it);
         }
       };
       ch.appendChild(b);
@@ -2313,6 +2704,7 @@ h2.task { font-size: 24px; }
     row.appendChild(sayBtn(it.voice));
     box.appendChild(row);
     var wrap = el("div", "chips"), chips = [], stops = it.ends.slice(0, -1), si = 0, tries = 0, anyMiss = false, anyReveal = false;
+    regLocal(function () { var a = si, b = tries, c = anyMiss, d = anyReveal; return function () { si = a; tries = b; anyMiss = c; anyReveal = d; }; });
     function dotOn(i) {
       chips[i].classList.remove("soft"); chips[i].classList.add("good");
       chips[i].appendChild(el("span", "dot", "•"));
@@ -2342,6 +2734,7 @@ h2.task { font-size: 24px; }
         tries++; anyMiss = true; S.cur.missed = true;
         if (tries >= 2) { anyReveal = true; c.classList.add("soft"); stopDone(true); }
         else { c.classList.add("soft", "shake"); c.disabled = true; gfeedback("soft", it.dot[si].h1); }
+        offerUndo(it);
       };
       chips.push(c); wrap.appendChild(c);
     });
@@ -2358,7 +2751,11 @@ h2.task { font-size: 24px; }
     box.appendChild(row);
     var chWrap = el("div");
     box.appendChild(chWrap);
-    var gi = 0, solved = {}, anyReveal = false;
+    var gi = 0, solved = {}, anyReveal = false, ts = { tries: 0 }, gen = 0;
+    regLocal(function () {
+      var a = gi, b = JSON.parse(JSON.stringify(solved)), c = anyReveal, t0 = ts, t1 = ts.tries;
+      return function () { gi = a; solved = b; anyReveal = c; ts = t0; ts.tries = t1; gen++; };
+    });
 
     function paint(activeGroup) {
       clear(w);
@@ -2379,28 +2776,31 @@ h2.task { font-size: 24px; }
       var g = it.groups[gi];
       var opts = shuffle(g.options.slice());
       var ch = el("div", "choices " + (opts.length === 3 ? "three" : opts.length === 2 ? "" : "one"));
-      var tries = 0;
+      ts = { tries: 0 };
+      var mine = ts;
       opts.forEach(function (o) {
         var b = el("button", "big", o);
         b.onclick = function () {
           if (S.locked) return;
-          tries++;
+          mine.tries++;
           S.cur.tries++;
           if (o === g.answer) {
             b.classList.add("good");
             solved[gi] = true;
-            if (tries > 1) S.cur.missed = true;
-            gapDone(tries === 1);
-          } else if (tries >= 2) {
+            if (mine.tries > 1) S.cur.missed = true;
+            gapDone(mine.tries === 1);
+          } else if (mine.tries >= 2) {
             S.cur.missed = true; anyReveal = true;
             solved[gi] = true;
             b.classList.add("soft");
             gapDone(false, true);
+            offerUndo(it);
           } else {
             S.cur.missed = true;
             b.classList.add("soft", "shake");
             b.disabled = true;
             gfeedback("soft", it.h1);
+            offerUndo(it);
           }
         };
         ch.appendChild(b);
@@ -2414,9 +2814,9 @@ h2.task { font-size: 24px; }
       if (!lastGap) {
         S.locked = true;
         gfeedback(revealed ? "soft" : "ok", revealed ? "Смотри: здесь «" + it.groups[gi].answer + "». Идём дальше." : rnd(PRAISE_GAME) + " Идём дальше.");
-        var cur = it;
+        var cur = it, g0 = gen;
         later(function () {
-          if (!S || S.items[S.i] !== cur) return;
+          if (!S || S.items[S.i] !== cur || g0 !== gen) return;
           gi++; S.locked = false; showOptions();
         }, 900);
         return;
@@ -2452,12 +2852,10 @@ h2.task { font-size: 24px; }
     S.sid = S.sid || DIARY.newSid();
     DIARY.record("game", okN, S.items.length, name, S.sid);
     var wrap = el("div", "final");
-    wrap.appendChild(el("div", "party", "🎉"));
+    wrap.appendChild(foxHero("joy"));
     confetti(wrap);
     wrap.appendChild(el("h1", null, record && g[0] ? "Новый рекорд!" : "Ты молодец!"));
-    var stars = "";
-    for (var i = 0; i < Math.min(S.stars, 16); i++) stars += "⭐";
-    wrap.appendChild(el("div", "bigstars", stars || "⭐"));
+    wrap.appendChild(starsEl(Math.max(1, Math.min(S.stars, 16))));
     wrap.appendChild(el("p", null, "Звёзд: " + S.stars + ". С первого раза: " + okN + " из " + S.items.length));
     if (S.best >= 2) wrap.appendChild(el("p", null, "🔥 Лучшая серия: " + S.best));
     var again = S.results.filter(function (r) { return !r.ok; }).map(function (r) { return r.word; });
@@ -2508,7 +2906,7 @@ h2.task { font-size: 24px; }
   function showProgress() {
     screen(showMenu);
     topbar(showMenu);
-    app.appendChild(annaRow("Вот твои успехи! 🌈"));
+    app.appendChild(annaRow("Вот твои успехи! 🌈", "joy"));
     DATA.topics.filter(function (t) { return t.ready; }).forEach(function (t) {
       var b1 = el("div", "box");
       b1.appendChild(el("h3", null, "Навыки · тема " + t.n));
@@ -2538,12 +2936,16 @@ h2.task { font-size: 24px; }
     b3.appendChild(el("h3", null, "Награды"));
     achievements().forEach(function (a) {
       var r = el("div", "ach" + (a.ok ? "" : " lock"));
-      r.appendChild(el("span", "i", a.i));
+      var ic = el("span", "i"); ic.appendChild(imgEl(AW_IMG[a.i] || "aw_star_gold.webp")); ic.setAttribute("aria-hidden", "true");
+      r.appendChild(ic);
       r.appendChild(el("span", null, a.t));
       b3.appendChild(r);
     });
     app.appendChild(b3);
+    tabs("prog");
   }
+  var AW_IMG = { "🌱": "aw_acorn.webp", "🏆": "aw_cup.webp", "🎓": "aw_crown.webp", "🗣": "aw_medal.webp", "📖": "aw_gift.webp",
+    "📚": "aw_chest.webp", "🔥": "aw_star_bronze.webp", "⭐": "aw_star_silver.webp", "🌟": "aw_star_gold.webp", "🎮": "aw_cup.webp" };
 
   /* =====================================================================
      ДНЕВНИК «Катиной школы»: каждое завершённое занятие/игра уходит туда ровно один раз.
@@ -2639,7 +3041,7 @@ h2.task { font-size: 24px; }
     var pd = PR.pend;
     var ok = pd.r.filter(function (r) { return r.o; }).length;
     var c = el("div", "final");
-    c.appendChild(el("div", "party", "🌸"));
+    c.appendChild(foxHero("hi"));
     c.appendChild(el("h1", null, "Занятие окончено"));
     if (pd.r.length) c.appendChild(el("p", null, "Сегодня: " + pd.r.length + " заданий, с первого раза " + ok + ". ⭐ всего " + PR.stats.stars));
     else c.appendChild(el("p", null, "Спасибо, что заглянула! Приходи ещё 🙂"));
@@ -2670,7 +3072,7 @@ h2.task { font-size: 24px; }
         ? "Всё сохранилось! Чтобы мама увидела итог, в следующий раз открой приложение кнопкой «📱 Анна Буквовна» внизу, под строкой ввода."
         : "Это открыто не в Telegram: итог сохранён здесь и уйдёт боту при запуске из бота.";
       clear(c);
-      c.appendChild(el("div", "party", "💾"));
+      c.appendChild(foxHero("explain"));
       c.appendChild(el("p", null, msg));
       var cl = el("button", "next", IN_TG ? "Закрыть" : "← В меню");
       cl.onclick = function () { if (IN_TG) { try { TG.close(); return; } catch (e) {} } showMenu(); };
