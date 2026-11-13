@@ -318,6 +318,26 @@ h2.task { font-size: 24px; }
 .kv { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 10px; padding: 4px 0; border-bottom: 2px dashed var(--grid); }
 .kv:last-child { border-bottom: 0; }
 
+/* Тема 2 «Речь»: ситуации, слова для точек, поезд, факты */
+.bubble.sit { flex: 1 1 220px; min-width: 0; text-align: center; font-size: 24px; line-height: 1.3; border-radius: 20px; margin: 0; }
+.bubble.sit .sitem { font-size: 48px; line-height: 1.1; margin-bottom: 4px; }
+.bubble.sit.txt { font-size: 28px; font-weight: 700; }
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 8px; margin: 10px 0 14px; padding-right: 6px; }
+.chip {
+  min-height: 52px; padding: 4px 12px; font-size: 24px; line-height: 1.15; color: var(--fg); background: var(--surface);
+  border: 3px solid var(--edge); border-radius: 14px; box-shadow: 3px 3px 0 var(--edge);
+}
+.chip:active { transform: translate(2px, 3px); box-shadow: 1px 1px 0 var(--edge); }
+.chip.good { background: var(--green); color: var(--on-candy); border-color: var(--ink); box-shadow: 3px 3px 0 var(--ink); opacity: 1; }
+.chip.soft { background: var(--orange); color: var(--on-candy); border-color: var(--ink); opacity: .9; }
+.chip .dot { color: var(--hl-candy); font-weight: 900; margin-left: 3px; }
+.train { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 2px; font-size: 34px; line-height: 1.2; min-height: 48px; margin: 4px 0; }
+.big.mkbtn { min-height: 96px; }
+.big .mk { display: block; font-size: 44px; line-height: 1; }
+.big .mkc { display: block; font-size: 18px; line-height: 1.2; }
+.sect { text-align: center; color: var(--muted); margin: 10px 0 0; }
+.box.fact h3 { font-size: 20px; }
+
 /* Финал и оверлей */
 .final { text-align: center; padding-right: 6px; }
 .final h1 { font-size: 36px; font-weight: 400; margin: 8px 0; color: var(--hl); line-height: 1.15; }
@@ -470,10 +490,19 @@ h2.task { font-size: 24px; }
     stress: { title: "Поймай ударение", ico: "⚡", sub: "Найди ударную гласную", skill: "stress", prefix: "stress:", kind: "stress", h: 262 },
     clap:   { title: "Хлопушка", ico: "👏", sub: "Считаем слоги", skill: "syllables", prefix: "syl:", kind: "syl", h: 42 },
     spy:    { title: "Шпион-звук", ico: "🕵️", sub: "Гласный или согласный?", skill: "vowels", prefix: "snd:", kind: "snd", h: 170 },
-    dict:   { title: "Вставь букву", ico: "✏️", sub: "Словарные слова", skill: "", prefix: "gap:", kind: "gap", h: 330 }
+    dict:   { title: "Вставь букву", ico: "✏️", sub: "Словарные слова", skill: "", prefix: "gap:", kind: "gap", h: 330 },
+    // тема 2: слов для повторения нет (prefix пустой), поэтому «слово» в итог не попадает
+    ears:   { title: "Ушки или карандаш?", ico: "👂", sub: "Устная или письменная?", skill: "oralwritten", prefix: "", kind: "oral", topic: 2 },
+    train:  { title: "Поезд из предложений", ico: "🚂", sub: "Где ставить точку?", skill: "boundaries", prefix: "", kind: "bound", topic: 2 },
+    sign:   { title: "Знак на конце", ico: "❗", sub: "Точка, вопрос или радость", skill: "endmark", prefix: "", kind: "mark", topic: 2 },
+    who:    { title: "Кто что делает?", ico: "🎭", sub: "Сообщает, спрашивает…", skill: "purpose", prefix: "", kind: "purp", topic: 2 }
   };
-  var ORDER = ["stress", "clap", "spy", "dict"];
-  var KIND = { syl_count: "syl", syl_split: "syl", stress: "stress", first_sound: "snd", sentence: "sent", gap: "gap" };
+  var ORDER = ["stress", "clap", "spy", "dict", "ears", "train", "sign", "who"];
+  var KIND = { syl_count: "syl", syl_split: "syl", stress: "stress", first_sound: "snd", sentence: "sent", gap: "gap",
+    purpose: "purp", oral_written: "oral", sent_count: "bound", sent_dot: "bound", end_mark: "mark" };
+  // у этих заданий нет «слова» для повторения и для списка «потренируем ещё»
+  var NOWORD = { sentence: 1, purpose: 1, oral_written: 1, sent_count: 1, sent_dot: 1, end_mark: 1 };
+  var LES = { sid: "", n: 0, told: false };   // тема 2: «расскажи своими словами» один раз за урок
 
   /* =====================================================================
      ХРАНЕНИЕ ПРОГРЕССА
@@ -839,8 +868,11 @@ h2.task { font-size: 24px; }
      МЕНЮ
      ===================================================================== */
   function SK(id) { return DATA.skills.filter(function (s) { return s.id === id; })[0]; }
-  function nextSkillId() {
-    for (var i = 0; i < DATA.skills.length; i++) if (!isMastered(DATA.skills[i].id)) return DATA.skills[i].id;
+  function nextSkillId(topic) {
+    for (var i = 0; i < DATA.skills.length; i++) {
+      if (topic && DATA.skills[i].topic !== topic) continue;
+      if (!isMastered(DATA.skills[i].id)) return DATA.skills[i].id;
+    }
     return null;
   }
   function allMastered() { return nextSkillId() === null; }
@@ -861,12 +893,12 @@ h2.task { font-size: 24px; }
     var nid = nextSkillId();
     var due = dueKeys().length;
     var items = [
-      { ico: "▶️", k: "pink", stk: "⭐", wide: 1, t: "Урок", s: nid ? "Дальше: " + SK(nid).title : "Тема 1 пройдена 🎉", h: 140, go: function () { lessonEntry(); } },
+      { ico: "▶️", k: "pink", stk: "⭐", wide: 1, t: "Урок", s: nid ? "Дальше: " + SK(nid).title : "Все темы пройдены 🎉", h: 140, go: function () { lessonEntry(); } },
       { ico: "📚", k: "teal", stk: "💖", t: "Темы", s: "Все 24 темы учебника", h: 205, go: showTopics },
       { ico: "✍️", k: "yellow", stk: "🌈", t: "Тренировка", s: due ? "Пора повторить: " + due : "8 заданий вперемешку", h: 28, go: function () { startRun("training"); } },
       { ico: "📖", k: "lilac", stk: "🍭", t: "Словарные слова", s: "Выучено " + learnedCount() + " из " + DATA.dictionary.length, h: 330, go: function () { startRun("dictionary"); } },
       { ico: "🎧", k: "teal", stk: "🎵", t: "Диктант", s: "Слушай и пиши", h: 275, go: function () { startRun("dictation"); } },
-      { ico: "🎮", k: "pink", stk: "🎊", t: "Игры", s: "4 игры на правилах", h: 55, go: showGames },
+      { ico: "🎮", k: "pink", stk: "🎊", t: "Игры", s: ORDER.length + " игр на правилах", h: 55, go: showGames },
       { ico: "📊", k: "yellow", stk: "🏆", t: "Мой прогресс", s: "Полоски, звёзды, награды", h: 170, go: showProgress }
     ];
     var m = el("div", "menu");
@@ -931,6 +963,17 @@ h2.task { font-size: 24px; }
       it = pickFresh(DATA.sentences, function (x) { return x.original; });
       var kind = rnd(["cap", "end", "both"]);
       ex = { type: type, skill: "sentence", item: it, word: it.original, kind: kind, T: it.v[kind], text: it.v[kind].text };
+    } else if (type === "purpose" || type === "oral_written") {
+      it = pickFresh(type === "purpose" ? DATA.speech.purpose : DATA.speech.oral, function (x) { return x.sit; });
+      ex = { type: type, skill: type === "purpose" ? "purpose" : "oralwritten", item: it, word: it.sit, T: it };
+    } else if (type === "end_mark") {
+      it = pickFresh(DATA.speech.marks, function (x) { return x.text; });
+      ex = { type: type, skill: "endmark", item: it, word: it.text, T: it };
+    } else if (type === "sent_count" || type === "sent_dot") {
+      it = pickFresh(DATA.speech.texts, function (x) { return x.text; });
+      ex = { type: type, skill: "boundaries", item: it, word: it.text };
+      if (type === "sent_count") ex.T = it.count;
+      else { ex.k = Math.floor(Math.random() * (it.n - 1)); ex.T = it.dot[ex.k]; }
     } else if (type === "gap") {
       it = o.word ? find(DATA.dictionary, function (x) { return x.word === o.word; }) : pickFresh(DATA.dictionary, function (x) { return x.word; });
       if (!it) return null;
@@ -942,7 +985,7 @@ h2.task { font-size: 24px; }
   }
   function wordKey(ex) {
     var k = KIND[ex.type];
-    if (ex.type === "sentence") return null;
+    if (NOWORD[ex.type]) return null;
     return { syl: "syl:", stress: "stress:", snd: "snd:", gap: "gap:" }[k] + ex.word;
   }
   function exForKey(key) {
@@ -957,7 +1000,7 @@ h2.task { font-size: 24px; }
 
   /* --- запись результата задания (как у бота: _record_first_miss и on_correct) --- */
   function resEntry(ex, ok, count) {
-    return { w: ex.type === "sentence" ? "" : ex.word, o: ok ? 1 : 0, s: ex.skill || "", k: KIND[ex.type], c: count ? 1 : 0 };
+    return { w: NOWORD[ex.type] ? "" : ex.word, o: ok ? 1 : 0, s: ex.skill || "", k: KIND[ex.type], c: count ? 1 : 0 };
   }
   function recordMiss(ex, mode) {
     var count = mode === "lesson" || mode === "training";
@@ -1103,7 +1146,8 @@ h2.task { font-size: 24px; }
     function hit() { finish(ex.att === 0, false); }
     var A = { alive: alive, hit: hit, miss: miss, feedback: feedback, finish: finish, R: R };
 
-    var builders = { syl_count: wSylCount, syl_split: wSylSplit, stress: wStress, first_sound: wFirstSound, sentence: wSentence, gap: wGap };
+    var builders = { syl_count: wSylCount, syl_split: wSylSplit, stress: wStress, first_sound: wFirstSound, sentence: wSentence, gap: wGap,
+      purpose: wPurpose, oral_written: wOral, end_mark: wMark, sent_count: wSentCount, sent_dot: wSentDot };
     builders[ex.type](wbox, ex, A);
 
     if (o.help && ex.skill) {
@@ -1296,6 +1340,74 @@ h2.task { font-size: 24px; }
     box.appendChild(ch);
   }
 
+  /* --- тема 2: ситуации и тексты --- */
+  function sitRow(emoji, text, voice, cls) {
+    var row = el("div", "wordrow");
+    var b = el("div", "bubble sit" + (cls ? " " + cls : ""));
+    if (emoji) b.appendChild(el("div", "sitem", emoji));
+    b.appendChild(document.createTextNode(text));
+    row.appendChild(b);
+    row.appendChild(sayBtn(voice || text));
+    return row;
+  }
+  // выбор из кнопок: o = {task, top, cls, labels, correct, mark}
+  function wChoice(box, ex, A, o) {
+    box.appendChild(el("div", "task", o.task));
+    box.appendChild(o.top);
+    var ch = el("div", "choices " + (o.cls || ""));
+    var btns = {};
+    function lockAll() { Object.keys(btns).forEach(function (x) { btns[x].disabled = true; btns[x].style.opacity = 1; }); }
+    o.labels.forEach(function (lv) {
+      var b = el("button", "big " + (o.mark ? "mkbtn" : o.cls === "four" ? "" : "twoline"));
+      if (o.mark) { b.appendChild(el("span", "mk", lv[1])); b.appendChild(el("span", "mkc", lv[0].split(" ")[0])); }
+      else b.textContent = lv[0];
+      btns[lv[1]] = b;
+      b.onclick = function () {
+        if (!A.alive()) return;
+        if (lv[1] === o.correct) { b.classList.add("good"); lockAll(); A.hit(); }
+        else { b.classList.add("soft", "shake"); b.disabled = true; A.miss(); }
+      };
+      ch.appendChild(b);
+    });
+    ex.revealUI = function () { lockAll(); btns[o.correct].classList.add("good"); };
+    box.appendChild(ch);
+  }
+  function wPurpose(box, ex, A) {
+    wChoice(box, ex, A, { task: "Что делает человек?", top: sitRow(ex.item.e, ex.item.sit), cls: "", labels: DATA.labels.purpose, correct: ex.item.a });
+  }
+  function wOral(box, ex, A) {
+    wChoice(box, ex, A, { task: "Какая это речь?", top: sitRow(ex.item.e, ex.item.sit), cls: "", labels: DATA.labels.oral, correct: ex.item.a });
+  }
+  function wMark(box, ex, A) {
+    wChoice(box, ex, A, { task: "Какой знак поставить в конце?", top: sitRow("", ex.item.text + " …", ex.item.text, "txt"), cls: "three", labels: DATA.labels.mark, correct: ex.item.a, mark: true });
+  }
+  function wSentCount(box, ex, A) {
+    var lab = [["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"]];
+    box.appendChild(el("div", "task small", "Прочитай вслух и делай паузу там, где кончается мысль"));
+    wChoice(box, ex, A, { task: "Сколько здесь предложений?", top: sitRow("", ex.item.text, ex.item.voice, "txt"), cls: "four", labels: lab, correct: String(ex.item.n) });
+  }
+  function wSentDot(box, ex, A) {
+    var it = ex.item, ans = it.ends[ex.k];
+    box.appendChild(el("div", "task", "Где кончается " + DATA.speech.ord[ex.k] + " предложение?"));
+    box.appendChild(el("div", "task small", "Нажми на слово, после которого пауза и точка"));
+    var row = el("div", "wordrow");
+    row.appendChild(sayBtn(it.voice));
+    box.appendChild(row);
+    var wrap = el("div", "chips"), chips = [];
+    function lockAll() { chips.forEach(function (c) { c.disabled = true; c.style.opacity = 1; }); }
+    it.words.forEach(function (w, i) {
+      var c = el("button", "chip", w);
+      c.onclick = function () {
+        if (!A.alive()) return;
+        if (i === ans) { c.classList.add("good"); c.appendChild(el("span", "dot", "•")); lockAll(); A.hit(); }
+        else { c.classList.add("soft", "shake"); c.disabled = true; A.miss(); }
+      };
+      chips.push(c); wrap.appendChild(c);
+    });
+    ex.revealUI = function () { lockAll(); chips[ans].classList.add("good"); chips[ans].appendChild(el("span", "dot", "•")); };
+    box.appendChild(wrap);
+  }
+
   /* --- словарное слово: вставь букву --- */
   function wGap(box, ex, A) {
     var it = ex.item;
@@ -1380,20 +1492,31 @@ h2.task { font-size: 24px; }
   function lessonAllDone() {
     screen(showMenu);
     topbar(showMenu);
-    app.appendChild(annaRow("🎉 Тема 1 «Повторяем то, что знаем» у тебя пройдена! Остальные темы Анна Буквовна ещё готовит 📚"));
+    app.appendChild(annaRow("🎉 Все готовые темы у тебя пройдены! Остальные Анна Буквовна ещё готовит 📚"));
     var acts = el("div", "acts final");
     [["✍️ Тренировка", function () { startRun("training"); }], ["🎮 Игры", showGames], ["🏠 В меню", showMenu]].forEach(function (a, i) {
       var b = el("button", i === 2 ? "ghost wide" : "primary wide", a[0]); b.onclick = a[1]; app.appendChild(b);
     });
   }
-  function topicTitle() { return "Тема 1. " + DATA.topics[0].title; }
+  function topicTitle(sk) {
+    var t = find(DATA.topics, function (x) { return x.n === sk.topic; }) || DATA.topics[0];
+    return "Тема " + t.n + ". " + t.title;
+  }
+  // карточка-факт (тема 2): короткая история без проверки
+  function factBox(card) {
+    var b = el("div", "box fact");
+    b.appendChild(el("h3", null, "📜 " + card.t));
+    b.appendChild(el("p", null, card.x));
+    return b;
+  }
 
   function lessonExamples(sid) {
     var sk = SK(sid);
     PR.stats.les = { s: sid, ph: "obs" }; mark("p_stats");
+    LES = { sid: sid, n: 0, told: false };
     screen(showMenu);
     topbar(showMenu);
-    app.appendChild(el("div", "eyebrow", topicTitle() + " · " + sk.title));
+    app.appendChild(el("div", "eyebrow", topicTitle(sk) + " · " + sk.title));
     app.appendChild(annaRow("Смотри внимательно 👀"));
     var list = el("div", "exlist");
     sk.examples.forEach(function (e) { list.appendChild(richEl("div", "exitem", e)); });
@@ -1419,6 +1542,7 @@ h2.task { font-size: 24px; }
     app.appendChild(el("div", "task small", "📌 Запомни:"));
     app.appendChild(richEl("div", "rulecard", sk.rule));
     app.appendChild(richEl("div", "kid", sk.rule_kid[0]));
+    if (sk.cards && sk.cards.length) app.appendChild(factBox(sk.cards[0]));
     var go = el("button", "next", "Попробую сама! →");
     go.onclick = function () { lessonTask(sid); };
     app.appendChild(go);
@@ -1434,8 +1558,50 @@ h2.task { font-size: 24px; }
     app.appendChild(go);
   }
 
+  // «Расскажи своими словами» (тема 2): без проверки и оценки, только тёплый ответ
+  function lessonTell(sid) {
+    var sk = SK(sid), t = rnd(sk.tell);
+    screen(showMenu);
+    topbar(showMenu);
+    app.appendChild(el("div", "eyebrow", sk.title + " · расскажи"));
+    app.appendChild(annaRow("Давай поговорим! Здесь нет оценок, мне просто интересно 🙂"));
+    app.appendChild(el("div", "rulecard", t.q));
+    var box = el("div");
+    app.appendChild(box);
+    function reply(skipped) {
+      clear(box);
+      var fb = el("div", "fb ok");
+      fb.textContent = skipped ? DATA.tell_skip : rnd(DATA.tell_warm) + (t.reply ? "\n" + t.reply : "");
+      box.appendChild(fb);
+      if (!skipped && sk.cards && sk.cards.length > 1) box.appendChild(factBox(sk.cards[1]));
+      var nb = el("button", "next", "Дальше →");
+      nb.onclick = function () { if (maybeBreak()) return; lessonTask(sid); };
+      box.appendChild(nb);
+      scrollTo(nb);
+    }
+    if (t.opts) {
+      var opts = el("div", "opts");
+      t.opts.forEach(function (o) {
+        var b = el("button", "big opt", o);
+        b.onclick = function () { reply(false); };
+        opts.appendChild(b);
+      });
+      box.appendChild(opts);
+    } else {
+      var say = el("button", "primary", "🗣 Я рассказала!");
+      say.onclick = function () { reply(false); };
+      box.appendChild(say);
+    }
+    var skip = el("button", "ghost wide", "Пропустить");
+    skip.onclick = function () { reply(true); };
+    box.appendChild(skip);
+  }
+
   function lessonTask(sid) {
     var sk = SK(sid);
+    if (LES.sid !== sid) LES = { sid: sid, n: 0, told: false };
+    if (sk.tell && sk.tell.length && !LES.told && LES.n >= 2) { LES.told = true; lessonTell(sid); return; }
+    LES.n++;
     var ex = newEx(rnd(sk.task_types));
     ex.mode = "lesson";
     screen(showMenu);
@@ -1474,7 +1640,9 @@ h2.task { font-size: 24px; }
     c.appendChild(el("h1", null, "Навык освоен!"));
     c.appendChild(el("div", "bigstars", "⭐⭐⭐⭐⭐"));
     c.appendChild(el("p", null, "«" + sk.title + "»: " + rules().mastery + " верных ответа подряд на новых словах!"));
-    var nid = nextSkillId();
+    var left = (sk.cards || []).slice(sk.tell && sk.tell.length ? 2 : 1);     // факты, которые ещё не показывали
+    left.forEach(function (cd) { c.appendChild(factBox(cd)); });
+    var nid = nextSkillId(sk.topic);
     var acts = el("div", "acts");
     if (nid) {
       var b = el("button", "primary", "Идём дальше 🚀");
@@ -1484,9 +1652,12 @@ h2.task { font-size: 24px; }
       m.onclick = showMenu;
       acts.appendChild(m);
     } else {
-      c.appendChild(el("p", null, "🎉 Вся тема 1 пройдена. Ты большая молодец!"));
-      [["✍️ Тренировка", function () { startRun("training"); }], ["🎮 Игры", showGames], ["🏠 В меню", showMenu]].forEach(function (a, i) {
-        var bb = el("button", i === 2 ? "ghost" : "primary", a[0]); bb.onclick = a[1]; acts.appendChild(bb);
+      c.appendChild(el("p", null, "🎉 Вся " + topicTitle(sk) + " пройдена. Ты большая молодец!"));
+      var other = nextSkillId();
+      var btnsL = [["✍️ Тренировка", function () { startRun("training"); }], ["🎮 Игры", showGames], ["🏠 В меню", showMenu]];
+      if (other) btnsL.unshift(["▶️ Следующая тема", function () { if (!maybeBreak()) lessonExamples(other); }]);
+      btnsL.forEach(function (a, i) {
+        var bb = el("button", i === btnsL.length - 1 ? "ghost" : "primary", a[0]); bb.onclick = a[1]; acts.appendChild(bb);
       });
     }
     c.appendChild(acts);
@@ -1626,7 +1797,7 @@ h2.task { font-size: 24px; }
       onDone: function (info) {
         RUN.res.push(info.clean);
         RUN.done++;
-        if (info.clean) RUN.ok++; else if (ex.type !== "sentence") RUN.weak.push(ex.word);
+        if (info.clean) RUN.ok++; else if (!NOWORD[ex.type]) RUN.weak.push(ex.word);
         var last = RUN.done >= RUN.total;
         var nb = el("button", "next", last ? "Готово! 🎉" : "Дальше →");
         nb.onclick = function () { if (maybeBreak()) return; runNext(); };
@@ -1823,10 +1994,16 @@ h2.task { font-size: 24px; }
     screen(showMenu);
     topbar(showMenu);
     app.appendChild(annaRow("Во что сыграем?"));
-    var m = el("div", "menu");
+    var m = el("div", "menu"), curTopic = 0;
     var gk = ["pink", "teal", "yellow", "lilac"], gs = ["🎯", "🎈", "🔍", "🍬"];
     ORDER.forEach(function (k, gi) {
       var g = GAMES[k];
+      if ((g.topic || 1) !== curTopic) {
+        curTopic = g.topic || 1;
+        var tt = find(DATA.topics, function (x) { return x.n === curTopic; });
+        if (curTopic > 1 || m.childNodes.length) { app.appendChild(m); m = el("div", "menu"); }
+        app.appendChild(el("div", "sect", "Тема " + curTopic + (tt ? " · " + tt.title : "")));
+      }
       var b = el("button", "card k-" + gk[gi % 4]);
       b.appendChild(el("span", "stk", gs[gi % 4]));
       b.appendChild(el("div", "ico", g.ico));
@@ -1841,6 +2018,10 @@ h2.task { font-size: 24px; }
     app.appendChild(m);
   }
   function buildItems(game) {
+    if (game === "ears") return pick(DATA.speech.oral, ROUND);
+    if (game === "who") return pick(DATA.speech.purpose, ROUND);
+    if (game === "sign") return pick(DATA.speech.marks, ROUND);
+    if (game === "train") return pick(DATA.speech.texts, 5);
     if (game === "stress") return pick(DATA.stress, ROUND).map(function (x) { return { word: x.word, idx: x.idx, sub: x.sub, h1: x.h1 }; });
     if (game === "clap") return pick(DATA.syllables, ROUND);
     if (game === "spy") return pick(DATA.sound, ROUND);
@@ -1886,6 +2067,10 @@ h2.task { font-size: 24px; }
     if (S.game === "stress") qStress(box, item);
     else if (S.game === "clap") qClap(box, item);
     else if (S.game === "spy") qSpy(box, item);
+    else if (S.game === "ears") qEars(box, item);
+    else if (S.game === "who") qWho(box, item);
+    else if (S.game === "sign") qSign(box, item);
+    else if (S.game === "train") qTrain(box, item);
     else qDict(box, item);
     app.appendChild(fb);
     app.appendChild(next);
@@ -1908,9 +2093,10 @@ h2.task { font-size: 24px; }
     S.results.push({ word: word, ok: clean, skill: g.skill });
     // прогресс — как в боте для игр: серия навыка не считается
     if (g.skill) recordSkill(g.skill, clean, false);
-    recordItem(g.prefix + word, clean);
+    if (g.prefix) recordItem(g.prefix + word, clean);
+    else recordItem("skill:" + g.skill, clean);
     if (S.game === "dict") recordDict(word, clean);
-    pendAdd({ w: word, o: clean ? 1 : 0, s: g.skill, k: g.kind, c: 0 });
+    pendAdd({ w: g.prefix ? word : "", o: clean ? 1 : 0, s: g.skill, k: g.kind, c: 0 });
     touchDay();
     gStat();
     var dots = document.querySelectorAll(".dots i");
@@ -2076,6 +2262,92 @@ h2.task { font-size: 24px; }
     box.appendChild(ch);
   }
 
+  /* игры темы 2 */
+  function gChoice(box, it, o) {
+    box.appendChild(el("div", "task", o.task));
+    box.appendChild(o.top);
+    var ch = el("div", "choices " + (o.cls || "")), btns = {};
+    function lockAll() { Object.keys(btns).forEach(function (x) { btns[x].disabled = true; btns[x].style.opacity = 1; }); }
+    o.labels.forEach(function (lv) {
+      var b = el("button", "big " + (o.mark ? "mkbtn" : "twoline"));
+      if (o.mark) { b.appendChild(el("span", "mk", lv[1])); b.appendChild(el("span", "mkc", lv[0].split(" ")[0])); }
+      else b.textContent = lv[0];
+      btns[lv[1]] = b;
+      b.onclick = function () {
+        if (S.locked) return;
+        S.cur.tries++;
+        if (lv[1] === it.a) {
+          b.classList.add("good"); lockAll();
+          gfeedback("ok", rnd(PRAISE_GAME) + (it.pr || ""));
+          finishWord(o.key, S.cur.tries === 1 ? 2 : 1, S.cur.tries === 1);
+        } else if (S.cur.tries >= 2) {
+          b.classList.add("soft"); btns[it.a].classList.add("good"); lockAll();
+          gfeedback("soft", it.rv);
+          finishWord(o.key, 0, false);
+        } else {
+          S.cur.missed = true;
+          b.classList.add("soft", "shake"); b.disabled = true;
+          gfeedback("soft", it.h1);
+        }
+      };
+      ch.appendChild(b);
+    });
+    box.appendChild(ch);
+  }
+  function qEars(box, it) {
+    gChoice(box, it, { task: "Ушки или карандаш?", top: sitRow(it.e, it.sit), cls: "", labels: DATA.labels.oral, key: it.sit });
+  }
+  function qWho(box, it) {
+    gChoice(box, it, { task: "Что делает человек?", top: sitRow(it.e, it.sit), cls: "", labels: DATA.labels.purpose, key: it.sit });
+  }
+  function qSign(box, it) {
+    gChoice(box, it, { task: "Какой знак на конце?", top: sitRow("", it.text + " …", it.text, "txt"), cls: "three", labels: DATA.labels.mark, key: it.text, mark: true });
+  }
+  function qTrain(box, it) {
+    box.appendChild(el("div", "task", "Поезд из предложений"));
+    box.appendChild(el("div", "task small", "Нажимай на слово, после которого пауза и точка. Каждая остановка — новый вагон!"));
+    var tr = el("div", "train", "🚂");
+    tr.setAttribute("aria-hidden", "true");
+    box.appendChild(tr);
+    var row = el("div", "wordrow");
+    row.appendChild(sayBtn(it.voice));
+    box.appendChild(row);
+    var wrap = el("div", "chips"), chips = [], stops = it.ends.slice(0, -1), si = 0, tries = 0, anyMiss = false, anyReveal = false;
+    function dotOn(i) {
+      chips[i].classList.remove("soft"); chips[i].classList.add("good");
+      chips[i].appendChild(el("span", "dot", "•"));
+      chips[i].disabled = true; chips[i].style.opacity = 1;
+    }
+    function lockAll() { chips.forEach(function (c) { c.disabled = true; c.style.opacity = 1; }); }
+    function stopDone(revealed) {
+      dotOn(stops[si]);
+      tr.appendChild(document.createTextNode("🚃"));
+      si++; tries = 0;
+      if (si >= stops.length) {
+        dotOn(it.ends[it.ends.length - 1]);
+        tr.appendChild(document.createTextNode("🚃🏁"));
+        lockAll();
+        var pts = !anyMiss ? 2 : (anyReveal ? 0 : 1);
+        gfeedback(anyReveal ? "soft" : "ok", (anyReveal ? "Вот как должно быть: " : rnd(PRAISE_GAME) + " ") + it.ok);
+        finishWord(it.text, pts, !anyMiss);
+      } else {
+        gfeedback(revealed ? "soft" : "ok", revealed ? it.dot[si - 1].rv : rnd(PRAISE_GAME) + " Едем дальше!");
+      }
+    }
+    it.words.forEach(function (w, i) {
+      var c = el("button", "chip", w);
+      c.onclick = function () {
+        if (S.locked) return;
+        if (i === stops[si]) { stopDone(false); return; }
+        tries++; anyMiss = true; S.cur.missed = true;
+        if (tries >= 2) { anyReveal = true; c.classList.add("soft"); stopDone(true); }
+        else { c.classList.add("soft", "shake"); c.disabled = true; gfeedback("soft", it.dot[si].h1); }
+      };
+      chips.push(c); wrap.appendChild(c);
+    });
+    box.appendChild(wrap);
+  }
+
   /* игра 4: Вставь букву */
   function qDict(box, it) {
     box.appendChild(el("div", "task", "Какой буквы не хватает?"));
@@ -2191,10 +2463,11 @@ h2.task { font-size: 24px; }
     var again = S.results.filter(function (r) { return !r.ok; }).map(function (r) { return r.word; });
     if (again.length) {
       var a = el("div", "bubble again");
-      a.textContent = "Ещё потренируем: " + again.join(", ");
+      a.textContent = GAMES[name].prefix ? "Ещё потренируем: " + again.join(", ")
+        : "Ещё потренируем: заданий " + again.length + ". Загляни в урок или тренировку 🙂";
       wrap.appendChild(a);
     } else {
-      wrap.appendChild(el("p", null, "Все слова с первого раза. Вот это да!"));
+      wrap.appendChild(el("p", null, GAMES[name].prefix ? "Все слова с первого раза. Вот это да!" : "Всё с первого раза. Вот это да!"));
     }
     var acts = el("div", "acts");
     var b1 = el("button", "primary", "🔁 Ещё раз");
@@ -2211,6 +2484,10 @@ h2.task { font-size: 24px; }
   /* =====================================================================
      ПРОГРЕСС
      ===================================================================== */
+  function topicDone(n) {
+    var l = DATA.skills.filter(function (s) { return s.topic === n; });
+    return l.length > 0 && l.every(function (s) { return isMastered(s.id); });
+  }
   function achievements() {
     var mastered = DATA.skills.filter(function (s) { return isMastered(s.id); }).length;
     var learned = learnedCount();
@@ -2218,7 +2495,8 @@ h2.task { font-size: 24px; }
     return [
       { i: "🌱", t: "Первое занятие", ok: PR.stats.days.length >= 1 },
       { i: "🏆", t: "Первый освоенный навык", ok: mastered >= 1 },
-      { i: "🎓", t: "Вся тема 1 пройдена", ok: mastered === DATA.skills.length },
+      { i: "🎓", t: "Вся тема 1 пройдена", ok: topicDone(1) },
+      { i: "🗣", t: "Вся тема 2 пройдена", ok: topicDone(2) },
       { i: "📖", t: "10 словарных слов выучено", ok: learned >= 10 },
       { i: "📚", t: "Все " + DATA.dictionary.length + " словарных слов", ok: learned >= DATA.dictionary.length },
       { i: "🔥", t: "3 дня подряд", ok: daysStreak() >= 3 },
@@ -2231,15 +2509,17 @@ h2.task { font-size: 24px; }
     screen(showMenu);
     topbar(showMenu);
     app.appendChild(annaRow("Вот твои успехи! 🌈"));
-    var b1 = el("div", "box");
-    b1.appendChild(el("h3", null, "Навыки · тема 1"));
-    DATA.skills.forEach(function (sk) {
-      var r = el("div");
-      r.appendChild(el("div", null, sk.title));
-      r.appendChild(el("div", "bar", bar(skillLevel(sk.id))));
-      b1.appendChild(r);
+    DATA.topics.filter(function (t) { return t.ready; }).forEach(function (t) {
+      var b1 = el("div", "box");
+      b1.appendChild(el("h3", null, "Навыки · тема " + t.n));
+      DATA.skills.filter(function (sk) { return sk.topic === t.n; }).forEach(function (sk) {
+        var r = el("div");
+        r.appendChild(el("div", null, sk.title));
+        r.appendChild(el("div", "bar", bar(skillLevel(sk.id))));
+        b1.appendChild(r);
+      });
+      app.appendChild(b1);
     });
-    app.appendChild(b1);
     var b2 = el("div", "box");
     var rows = [
       ["📖 Словарные", "выучено " + learnedCount() + " из " + DATA.dictionary.length],
@@ -2436,7 +2716,7 @@ h2.task { font-size: 24px; }
 
   // для проверок
   window.__app = {
-    get PR() { return PR; }, get S() { return S; }, get RUN() { return RUN; }, DBG: DBG,
+    get DATA() { return DATA; }, get PR() { return PR; }, get S() { return S; }, get RUN() { return RUN; }, DBG: DBG,
     DIARY: DIARY, T: { startRun: startRun, finishRun: finishRun, startGame: startGame, gFinal: gFinal, lessonMastered: lessonMastered,
       run: function () { return RUN; }, game: function () { return S; } },
     buildPayload: buildPayload, flush: flush, showMenu: showMenu, pendAdd: pendAdd, mark: mark,
